@@ -1,0 +1,10 @@
+<svg width="360" height="300" viewBox="0 0 360 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Incident register</title>
+  <desc id="desc">Shield and alert record representing incident logging.</desc>
+  <rect width="360" height="300" rx="28" fill="#F2F7FD"/>
+  <rect x="70" y="54" width="220" height="200" rx="18" fill="#FFFFFF" stroke="#D8E0EA" stroke-width="2"/>
+  <path d="M180 90c-28 0-50 22-50 50v28c0 44 28 92 50 122 22-30 50-78 50-122v-28c0-28-22-50-50-50z" fill="#1C5A99" opacity="0.14"/>
+  <path d="M180 108c-18 0-32 14-32 32v24c0 30 16 62 32 86 16-24 32-56 32-86v-24c0-18-14-32-32-32z" fill="#1C5A99"/>
+  <rect x="120" y="190" width="120" height="12" rx="6" fill="#D8E0EA"/>
+  <rect x="120" y="212" width="90" height="10" rx="5" fill="#D8E0EA"/>
+</svg>

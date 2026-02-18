@@ -1,0 +1,78 @@
+.signinLayout {
+  max-width: 28rem; /* ~448px */
+  margin: 0 auto;
+  padding: var(--theme-space-8) var(--theme-space-6);
+}
+
+.signinCard {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.signinTitle {
+  font-family: var(--theme-font-display);
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--theme-text-strong);
+  margin: 0 0 var(--theme-space-2);
+}
+
+.signinSubtitle {
+  font-size: 0.9375rem;
+  color: var(--theme-text-muted);
+  margin: 0 0 var(--theme-space-6);
+  line-height: 1.5;
+}
+
+.secondaryCta {
+  margin-top: var(--theme-space-6);
+  padding-top: var(--theme-space-6);
+  border-top: 1px solid var(--theme-border);
+  text-align: center;
+}
+
+.secondaryCtaText {
+  font-size: 0.875rem;
+  color: var(--theme-text-muted);
+  margin: 0 0 var(--theme-space-3);
+}
+
+.secondaryCtaLink {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--theme-accent);
+  text-decoration: none;
+  transition: color var(--theme-duration-normal) var(--theme-ease);
+}
+
+.secondaryCtaLink:hover {
+  color: var(--theme-accent-hover);
+  text-decoration: underline;
+}
+
+.secondaryCtaLink:focus-visible {
+  outline: var(--theme-focus-outline-width) solid var(--theme-focus-ring);
+  outline-offset: var(--theme-focus-ring-offset);
+  border-radius: var(--theme-radius-sm);
+}
+
+.footerTrust {
+  margin-top: var(--theme-space-6);
+  font-size: 0.75rem;
+  color: var(--theme-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .signinLayout {
+    padding: var(--theme-space-6) var(--theme-space-4);
+  }
+}
+
+@media (min-width: 420px) {
+  .signinCard {
+    max-width: 30rem; /* ~480px */
+  }
+}

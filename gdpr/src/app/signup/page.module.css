@@ -1,0 +1,29 @@
+.signupLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: var(--theme-space-12);
+  align-items: start;
+}
+
+.signupContent {
+  max-width: 36rem;
+}
+
+.signupFigure {
+  align-self: start;
+}
+
+.footerTrust {
+  margin-top: var(--theme-space-6);
+  font-size: 0.75rem;
+  color: var(--theme-text-muted);
+}
+
+@media (max-width: 768px) {
+  .signupLayout {
+    grid-template-columns: 1fr;
+  }
+  .signupFigure {
+    order: -1;
+  }
+}

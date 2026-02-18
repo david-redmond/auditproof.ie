@@ -1,0 +1,89 @@
+/* Signup form – theme tokens */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-space-6);
+}
+
+.formError {
+  padding: var(--theme-space-3);
+  border-radius: var(--theme-radius-sm);
+  border: 1px solid var(--theme-error-border);
+  background: var(--theme-error-bg);
+  font-size: 0.875rem;
+  color: var(--theme-error);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-space-2);
+}
+.fieldLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--theme-text);
+}
+.input {
+  width: 100%;
+  padding: var(--theme-space-2) var(--theme-space-3);
+  font-size: 0.9375rem;
+  font-family: var(--theme-font-sans);
+  color: var(--theme-text);
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border);
+  border-radius: var(--theme-radius-sm);
+  transition: border-color var(--theme-duration-normal) var(--theme-ease);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--theme-accent);
+}
+.input:focus-visible {
+  outline: var(--theme-focus-outline-width) solid var(--theme-focus-ring);
+  outline-offset: var(--theme-focus-ring-offset);
+}
+.inputError {
+  border-color: var(--theme-error);
+}
+.fieldError {
+  font-size: 0.75rem;
+  color: var(--theme-error);
+}
+.fieldHint {
+  font-size: 0.75rem;
+  color: var(--theme-text-muted);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--theme-space-3) var(--theme-space-6);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  font-family: var(--theme-font-sans);
+  color: var(--theme-accent-contrast);
+  background: var(--theme-accent);
+  border: none;
+  border-radius: var(--theme-radius-sm);
+  cursor: pointer;
+  transition: background var(--theme-duration-normal) var(--theme-ease);
+  width: 100%;
+}
+.submit:hover:not(:disabled) {
+  background: var(--theme-accent-hover);
+}
+.submit:focus-visible {
+  outline: var(--theme-focus-outline-width) solid var(--theme-accent-contrast);
+  outline-offset: var(--theme-focus-ring-offset);
+}
+.submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.underButton {
+  font-size: 0.75rem;
+  color: var(--theme-text-muted);
+}

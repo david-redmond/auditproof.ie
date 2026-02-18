@@ -1,0 +1,127 @@
+/**
+ * Audit-Proof design tokens.
+ * Typography: IBM Plex Serif (headings), Inter (body), IBM Plex Mono (codes).
+ * Colours: primary actions only in accent; semantic roles for status.
+ */
+
+:root {
+  /* Neutral greys – background, borders, secondary text */
+  --theme-bg: #f6f7f9;
+  --theme-bg-alt: #eef0f4;
+  --theme-text: #1a1d24;
+  --theme-text-strong: #0d0f14;
+  --theme-text-muted: #5c6370;
+  --theme-border: #d1d5dc;
+  --theme-border-strong: #b0b5be;
+  --theme-card-bg: #ffffff;
+
+  /* Primary action only – Create, Save, Generate */
+  --theme-accent: #1c5a99;
+  --theme-accent-hover: #164a82;
+  --theme-accent-contrast: #ffffff;
+  --theme-accent-soft: #e8eef6;
+  --theme-card-highlight-bg: #f4f7fc;
+
+  /* Semantic: completed / OK / resolved */
+  --theme-success: #0d7a5a;
+  --theme-success-bg: #ecf7f4;
+  --theme-success-border: #b8e0d4;
+
+  /* Semantic: review due, needs attention (not errors) */
+  --theme-amber: #b45309;
+  --theme-amber-bg: #fef8ee;
+  --theme-amber-border: #f5d9b8;
+
+  /* Semantic: real problems only – validation, overdue */
+  --theme-error: #b91c1c;
+  --theme-error-bg: #fef2f2;
+  --theme-error-border: #fecaca;
+
+  /* Hero (subtle) */
+  --theme-hero-bg: radial-gradient(
+      circle at top left,
+      rgba(28, 90, 153, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(13, 122, 90, 0.06),
+      transparent 50%
+    );
+
+  /* Focus ring */
+  --theme-focus-ring: #1c5a99;
+  --theme-focus-ring-offset: 2px;
+  --theme-focus-outline-width: 2px;
+
+  /* Typography – Inter (body), IBM Plex Serif (headings), IBM Plex Mono (codes) */
+  --theme-font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --theme-font-display: var(--font-serif), "IBM Plex Serif", "Georgia", serif;
+  --theme-font-mono: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Spacing scale (optional – use for consistency) */
+  --theme-space-1: 0.25rem;
+  --theme-space-2: 0.5rem;
+  --theme-space-3: 0.75rem;
+  --theme-space-4: 1rem;
+  --theme-space-5: 1.25rem;
+  --theme-space-6: 1.5rem;
+  --theme-space-8: 2rem;
+  --theme-space-10: 2.5rem;
+  --theme-space-12: 3rem;
+  --theme-space-14: 3.5rem;
+  --theme-space-16: 4rem;
+  --theme-space-20: 5rem;
+
+  /* Radii */
+  --theme-radius-sm: 10px;
+  --theme-radius-md: 16px;
+  --theme-radius-lg: 22px;
+
+  /* Motion */
+  --theme-duration-fast: 0.15s;
+  --theme-duration-normal: 0.2s;
+  --theme-duration-slow: 0.45s;
+  --theme-ease: ease;
+
+  /* Shadow */
+  --theme-shadow-md: 0 20px 45px -30px rgba(15, 27, 45, 0.45),
+    0 12px 24px -20px rgba(15, 27, 45, 0.2);
+  --theme-shadow-sm: 0 8px 18px -14px rgba(15, 27, 45, 0.25);
+}
+
+/* Optional: dark theme (enable via class on html or media) */
+[data-theme="dark"] {
+  --theme-bg: #1a1a1a;
+  --theme-bg-alt: #262626;
+  --theme-text: #f5f5f5;
+  --theme-text-muted: #a3a3a3;
+  --theme-text-strong: #ffffff;
+  --theme-border: #404040;
+  --theme-border-strong: #525252;
+  --theme-card-bg: #262626;
+  --theme-accent: #3b82f6;
+  --theme-accent-hover: #60a5fa;
+  --theme-accent-contrast: #ffffff;
+  --theme-accent-soft: rgba(59, 130, 246, 0.2);
+  --theme-card-highlight-bg: #1e3a5f;
+  --theme-success: #34d399;
+  --theme-success-bg: rgba(16, 185, 129, 0.15);
+  --theme-success-border: #065f46;
+  --theme-amber: #fbbf24;
+  --theme-amber-bg: rgba(245, 158, 11, 0.15);
+  --theme-amber-border: #78350f;
+  --theme-hero-bg: none;
+  --theme-focus-ring: #60a5fa;
+  --theme-error: #f87171;
+  --theme-error-bg: #450a0a;
+  --theme-error-border: #7f1d1d;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --theme-duration-fast: 0s;
+    --theme-duration-normal: 0s;
+  }
+}

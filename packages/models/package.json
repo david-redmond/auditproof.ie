@@ -1,0 +1,21 @@
+{
+  "name": "gdpr-models",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./constants": "./dist/constants.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "mongoose": "^9.1.6"
+  },
+  "devDependencies": {
+    "mongoose": "^9.1.6",
+    "typescript": "^5"
+  }
+}
