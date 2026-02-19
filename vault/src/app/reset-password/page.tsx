@@ -20,7 +20,7 @@ export default async function ResetPasswordPage({
 
   return (
     <div className={shared.page}>
-      <Header authVariant />
+      <Header />
 
       <main id="main-content" tabIndex={-1}>
         <section className={shared.section}>

@@ -33,9 +33,10 @@ type SidebarProps = {
   isOpen?: boolean;
   onClose?: () => void;
   canManageUsers?: boolean;
+  organisationName?: string;
 };
 
-export function DashboardSidebar({ isOpen = false, onClose, canManageUsers = false }: SidebarProps) {
+export function DashboardSidebar({ isOpen = false, onClose, canManageUsers = false, organisationName }: SidebarProps) {
   const pathname = usePathname();
   const sidebarRef = useRef<HTMLElement>(null);
   const prevPathnameRef = useRef<string | null>(null);
@@ -112,6 +113,12 @@ export function DashboardSidebar({ isOpen = false, onClose, canManageUsers = fal
 
   const sidebarContent = (
     <>
+      {organisationName && (
+        <div className={styles.orgHeader} aria-label="Organisation">
+          {organisationName}
+        </div>
+      )}
+      <div className={styles.sidebarContent}>
       {onClose && (
         <button
           type="button"
@@ -164,6 +171,7 @@ export function DashboardSidebar({ isOpen = false, onClose, canManageUsers = fal
           </ul>
         </div>
       )}
+      </div>
     </>
   );
 

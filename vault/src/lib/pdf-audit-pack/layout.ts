@@ -1,11 +1,15 @@
 import type { PdfContext } from "./types";
 import {
   MARGIN,
+  MARGIN_TABLE,
   PAGE_W,
   PAGE_H,
+  PAGE_W_LANDSCAPE,
+  PAGE_H_LANDSCAPE,
   HEADER_H,
   CONTENT_TOP,
   CONTENT_BOTTOM,
+  FOOTER_H,
   LINE,
   LINE_SMALL,
   SECTION_TITLE_SIZE,
@@ -17,15 +21,18 @@ import {
 } from "./tokens";
 
 /**
- * Add a new page with standard header and set y to content top.
+ * Add a new portrait page with standard header and set y to content top.
  */
 export function addPageWithHeader(
   ctx: PdfContext,
   opts: { orgName: string; versionLabel: string }
 ): void {
-  const { page, font, bold, colors, setPage, setY } = ctx;
+  const { font, colors, setPage, setY } = ctx;
   const newPage = ctx.pdf.addPage([PAGE_W, PAGE_H]);
   setPage(newPage);
+  ctx.pageWidth = PAGE_W;
+  ctx.pageHeight = PAGE_H;
+  ctx.margin = MARGIN;
   const headerY = PAGE_H - MARGIN - 6;
   newPage.drawText(opts.orgName, {
     x: MARGIN,
@@ -60,19 +67,104 @@ export function addPageWithHeader(
 }
 
 /**
- * Draw footer on a single page (call for each page at the end).
+ * Add a new landscape page for table-heavy sections. Uses 20–25mm margin.
+ * Sets ctx.pageWidth, pageHeight, margin and nextPageLandscape for continuation.
+ */
+export function addPageWithHeaderLandscape(
+  ctx: PdfContext,
+  opts: { orgName: string; versionLabel: string }
+): void {
+  const { page, font, colors, setPage, setY } = ctx;
+  const w = PAGE_W_LANDSCAPE;
+  const h = PAGE_H_LANDSCAPE;
+  const margin = MARGIN_TABLE;
+  const newPage = ctx.pdf.addPage([w, h]);
+  setPage(newPage);
+  ctx.pageWidth = w;
+  ctx.pageHeight = h;
+  ctx.margin = margin;
+  ctx.nextPageLandscape = true;
+  const headerY = h - margin - 6;
+  newPage.drawText(opts.orgName, {
+    x: margin,
+    y: headerY,
+    size: FOOTER_SIZE,
+    font,
+    color: colors.muted,
+  });
+  const centerTitle = "GDPR Audit Pack";
+  const tw = font.widthOfTextAtSize(centerTitle, FOOTER_SIZE);
+  newPage.drawText(centerTitle, {
+    x: (w - tw) / 2,
+    y: headerY,
+    size: FOOTER_SIZE,
+    font,
+    color: colors.muted,
+  });
+  newPage.drawText(opts.versionLabel, {
+    x: w - margin - font.widthOfTextAtSize(opts.versionLabel, FOOTER_SIZE),
+    y: headerY,
+    size: FOOTER_SIZE,
+    font,
+    color: colors.muted,
+  });
+  newPage.drawLine({
+    start: { x: margin, y: h - margin - HEADER_H },
+    end: { x: w - margin, y: h - margin - HEADER_H },
+    thickness: 0.5,
+    color: colors.divider,
+  });
+  const contentTop = h - margin - HEADER_H - 12;
+  setY(contentTop);
+}
+
+/** Default footer left text (Go Solutions product name) */
+export const FOOTER_LEFT_DEFAULT = "Go Solutions GDPR Audit Pack";
+
+/**
+ * Draw footer on a single page: left (brand), center (Confidential), right (Page N of M).
+ * Call for each page at the end of PDF generation.
  */
 export function drawFooterOnPage(
   ctx: PdfContext,
-  page: { drawText: PdfContext["page"]["drawText"]; drawLine?: PdfContext["page"]["drawLine"] },
-  opts: { generatedAtStr: string; pageNum: number; totalPages: number }
+  page: PdfContext["page"],
+  opts: {
+    pageNum: number;
+    totalPages: number;
+    left?: string;
+    center?: string;
+    right?: string;
+    /** @deprecated use left/center/right; if set and right empty, right becomes "Generated ... | Page N of M" */
+    generatedAtStr?: string;
+  }
 ): void {
   const { font, colors } = ctx;
-  const footerText = `Generated ${opts.generatedAtStr} • Page ${opts.pageNum} of ${opts.totalPages}`;
-  const w = font.widthOfTextAtSize(footerText, FOOTER_SIZE);
-  page.drawText(footerText, {
-    x: (PAGE_W - w) / 2,
-    y: MARGIN + 6,
+  const left = opts.left ?? FOOTER_LEFT_DEFAULT;
+  const center = opts.center ?? "Confidential";
+  const right = opts.right ?? `Page ${opts.pageNum} of ${opts.totalPages}`;
+  const pageW = page.getWidth();
+  const pageH = page.getHeight();
+  const footerMargin = pageH < 700 ? MARGIN_TABLE : MARGIN;
+  const y = footerMargin + 8;
+  page.drawText(left, {
+    x: footerMargin,
+    y,
+    size: FOOTER_SIZE,
+    font,
+    color: colors.footerMuted ?? colors.muted,
+  });
+  const cw = font.widthOfTextAtSize(center, FOOTER_SIZE);
+  page.drawText(center, {
+    x: (pageW - cw) / 2,
+    y,
+    size: FOOTER_SIZE,
+    font,
+    color: colors.footerMuted ?? colors.muted,
+  });
+  const rw = font.widthOfTextAtSize(right, FOOTER_SIZE);
+  page.drawText(right, {
+    x: pageW - footerMargin - rw,
+    y,
     size: FOOTER_SIZE,
     font,
     color: colors.footerMuted ?? colors.muted,
@@ -90,7 +182,7 @@ export function draw(
 ): void {
   addPageIfNeeded(ctx, size === SMALL_SIZE ? LINE_SMALL : LINE);
   ctx.page.drawText(text, {
-    x: MARGIN,
+    x: ctx.margin,
     y: ctx.y,
     size,
     font: isBold ? ctx.bold : ctx.font,
@@ -123,13 +215,23 @@ export function wrapText(
   if (line) draw(ctx, line, size, false);
 }
 
+/** Content bottom for current page (uses ctx.pageHeight and ctx.margin). */
+export function getContentBottom(ctx: PdfContext): number {
+  return ctx.margin + FOOTER_H + 12;
+}
+
 export function addPageIfNeeded(
   ctx: PdfContext,
   requiredSpace: number,
   onNewPage?: () => void
 ): void {
-  if (ctx.y - requiredSpace < CONTENT_BOTTOM) {
-    addPageWithHeader(ctx, ctx.headerOpts);
+  const contentBottom = getContentBottom(ctx);
+  if (ctx.y - requiredSpace < contentBottom) {
+    if (ctx.nextPageLandscape) {
+      addPageWithHeaderLandscape(ctx, ctx.headerOpts);
+    } else {
+      addPageWithHeader(ctx, ctx.headerOpts);
+    }
     onNewPage?.();
   }
 }
@@ -141,8 +243,8 @@ export function drawDivider(ctx: PdfContext): void {
   addPageIfNeeded(ctx, 10);
   ctx.setY(ctx.y - 4);
   ctx.page.drawLine({
-    start: { x: MARGIN, y: ctx.y },
-    end: { x: PAGE_W - MARGIN, y: ctx.y },
+    start: { x: ctx.margin, y: ctx.y },
+    end: { x: ctx.pageWidth - ctx.margin, y: ctx.y },
     thickness: 0.5,
     color: ctx.colors.divider,
   });
@@ -155,7 +257,7 @@ export function drawDivider(ctx: PdfContext): void {
 export function drawSectionTitle(ctx: PdfContext, text: string): void {
   addPageIfNeeded(ctx, SECTION_TITLE_SIZE + LINE);
   ctx.page.drawText(text, {
-    x: MARGIN,
+    x: ctx.margin,
     y: ctx.y,
     size: SECTION_TITLE_SIZE,
     font: ctx.bold,
@@ -163,8 +265,8 @@ export function drawSectionTitle(ctx: PdfContext, text: string): void {
   });
   ctx.setY(ctx.y - SECTION_TITLE_SIZE - 4);
   ctx.page.drawLine({
-    start: { x: MARGIN, y: ctx.y },
-    end: { x: PAGE_W - MARGIN, y: ctx.y },
+    start: { x: ctx.margin, y: ctx.y },
+    end: { x: ctx.pageWidth - ctx.margin, y: ctx.y },
     thickness: 0.5,
     color: ctx.colors.divider,
   });
@@ -178,7 +280,7 @@ export function drawSectionTitle(ctx: PdfContext, text: string): void {
 export function drawStatusLine(ctx: PdfContext, text: string): void {
   addPageIfNeeded(ctx, LINE_SMALL);
   ctx.page.drawText(text, {
-    x: MARGIN,
+    x: ctx.margin,
     y: ctx.y,
     size: SMALL_SIZE,
     font: ctx.font,

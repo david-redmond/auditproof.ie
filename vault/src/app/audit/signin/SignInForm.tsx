@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { auditPath } from "@/lib/constants";
+import { trackEvent } from "@/lib/analytics";
 import styles from "./page.module.css";
 
 export default function SignInForm() {
@@ -15,6 +16,7 @@ export default function SignInForm() {
     event.preventDefault();
     setError(null);
     setPending(true);
+    trackEvent("sign_in_submit");
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -32,17 +34,21 @@ export default function SignInForm() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        setError(data?.error || "Sign in failed");
+        const errMsg = data?.error || "Sign in failed";
+        setError(errMsg);
         setPending(false);
+        trackEvent("sign_in_error", { message: errMsg });
         return;
       }
 
+      trackEvent("sign_in_success");
       form.reset();
       router.replace(auditPath("/dashboard"));
     } catch (err) {
       console.error(err);
       setError("Sign in failed");
       setPending(false);
+      trackEvent("sign_in_error", { message: "network_error" });
     }
   }
 

@@ -23,6 +23,24 @@ Open [http://localhost:3000](http://localhost:3000). The home page is the market
 4. Click **Create audit pack**, choose which sections to include (RoPA, DSRs, Incidents, Documents), then click **Create audit pack**.
 5. When the pack is ready, click **Download PDF** to get the snapshot. The PDF includes article signposting (e.g. Article 30 RoPA, Articles 12–23 DSR), a disclaimer, status-at-a-glance, and audit log event count. This pack is a read-only snapshot for accountability and record-keeping; it does not constitute legal advice.
 
+### GDPR Audit Pack PDF – design and branding
+
+The PDF is built from a small **design token** module so layout and branding can be adjusted in one place.
+
+- **Tokens** (`vault/src/lib/pdf-audit-pack/tokens.ts`): Page size (A4), margins (min 18 mm), typography sizes (title 22–26 pt, section 14–16 pt, body 10.5–11 pt, tables 9.5–10 pt), line heights, table cell padding, card padding and radius, and grid column count.
+- **Colours** (`getColors()` in `tokens.ts`): Text, muted, divider, table header/zebra, box border/background, footer, and a single **accent** colour (e.g. blue) plus **accentTint**, **risk**, and **success** for highlights and badges. To change branding (e.g. Go Solutions blue), edit the `accent` and optionally `accentTint` values in `getColors()`.
+- **Fonts**: The PDF uses `pdf-lib` standard fonts (Helvetica) by default. To use Inter or Source Sans, add `.ttf`/`.otf` files (e.g. under `public/fonts/`) and embed them when creating the document (see `route.ts`); then pass the embedded font into the PDF context instead of `StandardFonts.Helvetica`.
+- **Footer**: Left text defaults to “Go Solutions GDPR Audit Pack”, centre to “Confidential”, right to “Page N of M”. Override by passing `left`, `center`, or `right` to `drawFooterOnPage()`.
+
+**Table layout (enterprise audit):**
+
+- **Orientation**: Cover and summary stay portrait; all table-heavy sections (RoPA, DSR, Incidents, Documents) use **landscape** A4 for width and readability.
+- **Margins**: 20–25 mm on table pages (`MARGIN_TABLE` ≈ 60 pt); portrait uses `MARGIN`.
+- **Cell padding**: 12 pt horizontal, 10 pt vertical (`TABLE_CELL_PAD_H`, `TABLE_CELL_PAD_V`) for consistent spacing and no overlap.
+- **Column widths**: Fixed; long-text columns (Summary, Retention, Note, Rationale, Document name) get ~30–35% of content width; boolean/short fields get ~8–12%.
+- **DSR two-row pattern**: Each request is two physical rows — row 1: Received | Type | Who | Reply by | Late?; row 2: ID? | Sent? | Extension | Note — to avoid horizontal compression and overflow.
+- **Headers**: Short labels (e.g. “ID?”, “Sent?”, “Late?”, “DPC?”) to avoid layout breakage; full wording in section titles/subtitles where needed.
+
 ### Environment variables
 
 Create `vault/.env.local` (or set these in your deployment environment). Minimum for local dev:

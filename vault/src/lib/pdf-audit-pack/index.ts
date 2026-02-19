@@ -18,7 +18,10 @@ export {
 } from "./labels";
 export {
   addPageWithHeader,
+  addPageWithHeaderLandscape,
   drawFooterOnPage,
+  FOOTER_LEFT_DEFAULT,
+  getContentBottom,
   draw,
   wrapText,
   addPageIfNeeded,
@@ -26,7 +29,7 @@ export {
   drawSectionTitle,
   drawStatusLine,
 } from "./layout";
-export { drawStyledTable, truncateCell } from "./table";
+export { drawStyledTable, drawStyledTableTwoRow, truncateCell, wrapCellLines } from "./table";
 export { drawCoverPage } from "./cover";
 export type { CoverPageOpts } from "./cover";
 export { drawExecutiveSummaryPage } from "./executive-summary";

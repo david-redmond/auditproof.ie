@@ -6,9 +6,13 @@ import styles from "./audit-exports.module.css";
 type Props = {
   open: boolean;
   onClose: () => void;
+  /** Display price for annual plan (e.g. 179). Default 179. */
+  annualPrice?: number;
+  /** Display price for monthly plan (e.g. 18). Default 18. */
+  monthlyPrice?: number;
 };
 
-export function PaywallModal({ open, onClose }: Props) {
+export function PaywallModal({ open, onClose, annualPrice = 179, monthlyPrice = 18 }: Props) {
   const [loading, setLoading] = useState<"annual" | "monthly" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -137,7 +141,7 @@ export function PaywallModal({ open, onClose }: Props) {
                   Redirecting…
                 </>
               ) : (
-                "Subscribe €299/year (recommended)"
+                `Subscribe €${annualPrice}/year (recommended)`
               )}
             </button>
             <button
@@ -158,7 +162,7 @@ export function PaywallModal({ open, onClose }: Props) {
                   Redirecting…
                 </>
               ) : (
-                "Subscribe €29/month"
+                `Subscribe €${monthlyPrice}/month`
               )}
             </button>
           </div>

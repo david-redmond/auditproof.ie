@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 import styles from "./PartnerSignupForm.module.css";
 
 type FieldErrors = Partial<
@@ -127,6 +128,7 @@ export default function PartnerSignupForm() {
     setStatus("submitting");
     setFormError(null);
     setFieldErrors({});
+    trackEvent("partner_form_submit");
 
     try {
       const res = await fetch("/api/partner", {
@@ -154,15 +156,18 @@ export default function PartnerSignupForm() {
         if (data?.fieldErrors) setFieldErrors(data.fieldErrors);
         setFormError(msg);
         setStatus("idle");
+        trackEvent("partner_form_error", { message: msg });
         return;
       }
 
+      trackEvent("partner_form_success");
       setStatus("success");
     } catch {
       setFormError(
         "Network error. Please check your connection and try again."
       );
       setStatus("idle");
+      trackEvent("partner_form_error", { message: "network_error" });
     }
   }
 

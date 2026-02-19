@@ -5,6 +5,7 @@ import {
   PAGE_H,
   HEADER_H,
   BOX_PAD,
+  SPACE_4,
   SPACE_8,
   SPACE_12,
   H2_SIZE,
@@ -45,24 +46,28 @@ export function drawPageHeader(ctx: PdfContext, opts: PageHeaderOpts): number {
         height: logoH,
         opacity: 0.9,
       });
-      const leftX = MARGIN + logoW + 10;
-      page.drawText(opts.leftTitle, {
-        x: leftX,
-        y: y - 6,
-        size: FOOTER_SIZE + 1,
-        font: bold,
-        color: colors.text,
-      });
+      if (opts.leftTitle) {
+        const leftX = MARGIN + logoW + 10;
+        page.drawText(opts.leftTitle, {
+          x: leftX,
+          y: y - 6,
+          size: FOOTER_SIZE + 1,
+          font: bold,
+          color: colors.text,
+        });
+      }
     } catch {
-      page.drawText(opts.leftTitle, {
-        x: MARGIN,
-        y: y - 6,
-        size: FOOTER_SIZE + 1,
-        font: bold,
-        color: colors.text,
-      });
+      if (opts.leftTitle) {
+        page.drawText(opts.leftTitle, {
+          x: MARGIN,
+          y: y - 6,
+          size: FOOTER_SIZE + 1,
+          font: bold,
+          color: colors.text,
+        });
+      }
     }
-  } else {
+  } else if (opts.leftTitle) {
     page.drawText(opts.leftTitle, {
       x: MARGIN,
       y: y - 6,
@@ -299,10 +304,8 @@ export function drawCalloutBox(
 
 /**
  * Section card: card-like container with title, optional subtitle, optional status line.
- * Light border, subtle background. Content is drawn below inside card margins.
+ * Light border, subtle background. Uses spacing scale for internal rhythm.
  */
-const SPACE_4 = 4;
-
 export function drawSectionCard(
   ctx: PdfContext,
   opts: { title: string; subtitle?: string; statusLine?: string }
@@ -310,17 +313,18 @@ export function drawSectionCard(
   addPageIfNeeded(ctx, 60);
   const { page, font, bold, colors } = ctx;
   const lineHeight = LINE_SMALL + 2;
-  let cardHeight = H2_SIZE + 4;
+  let cardHeight = H2_SIZE + SPACE_4;
   if (opts.subtitle) cardHeight += lineHeight + SPACE_4;
   if (opts.statusLine) cardHeight += lineHeight + SPACE_4;
   cardHeight += 2 * BOX_PAD;
 
   ctx.setY(ctx.y - cardHeight);
   const boxY = ctx.y;
-  const boxWidth = PAGE_W - 2 * MARGIN;
+  const margin = ctx.margin ?? MARGIN;
+  const boxWidth = (ctx.pageWidth ?? PAGE_W) - 2 * margin;
 
   page.drawRectangle({
-    x: MARGIN,
+    x: margin,
     y: boxY,
     width: boxWidth,
     height: cardHeight,
@@ -331,7 +335,7 @@ export function drawSectionCard(
 
   let y = boxY + cardHeight - BOX_PAD - H2_SIZE;
   page.drawText(opts.title, {
-    x: MARGIN + BOX_PAD,
+    x: margin + BOX_PAD,
     y,
     size: H2_SIZE,
     font: bold,
@@ -341,7 +345,7 @@ export function drawSectionCard(
 
   if (opts.subtitle) {
     page.drawText(opts.subtitle, {
-      x: MARGIN + BOX_PAD,
+      x: margin + BOX_PAD,
       y,
       size: SMALL_SIZE,
       font,
@@ -352,7 +356,7 @@ export function drawSectionCard(
 
   if (opts.statusLine) {
     page.drawText(opts.statusLine, {
-      x: MARGIN + BOX_PAD,
+      x: margin + BOX_PAD,
       y,
       size: SMALL_SIZE,
       font,
@@ -370,15 +374,16 @@ export function drawInfoBox(ctx: PdfContext, lines: string[]): void {
   if (lines.length === 0) return;
   addPageIfNeeded(ctx, lines.length * (LINE_SMALL + 4) + 2 * BOX_PAD);
   const { page, font, colors } = ctx;
+  const margin = ctx.margin ?? MARGIN;
+  const boxWidth = (ctx.pageWidth ?? PAGE_W) - 2 * margin;
   const lineHeight = LINE_SMALL + 4;
   const boxHeight = lines.length * lineHeight + 2 * BOX_PAD;
-  const boxWidth = PAGE_W - 2 * MARGIN;
 
   ctx.setY(ctx.y - boxHeight);
   const boxY = ctx.y;
 
   page.drawRectangle({
-    x: MARGIN,
+    x: margin,
     y: boxY,
     width: boxWidth,
     height: boxHeight,
@@ -390,7 +395,7 @@ export function drawInfoBox(ctx: PdfContext, lines: string[]): void {
   let rowY = boxY + boxHeight - BOX_PAD - LINE_SMALL;
   for (const line of lines) {
     page.drawText(line, {
-      x: MARGIN + BOX_PAD,
+      x: margin + BOX_PAD,
       y: rowY,
       size: SMALL_SIZE,
       font,

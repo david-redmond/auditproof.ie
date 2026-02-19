@@ -1,73 +1,59 @@
 import Link from "next/link";
-import shared from "@/app/shared.module.css";
+import styles from "./Footer.module.css";
 
 export default function Footer() {
+  const year = new Date().getFullYear();
   return (
-    <footer className={shared.footer}>
-      <div className={shared.container}>
-        <div className={shared.footerGrid}>
-          <div>
-            <nav className={shared.footerLinks} aria-label="Footer navigation">
-              <Link href="/gdpr" className={shared.footerLink}>
-                Product
-              </Link>
-              <Link href="/#pricing" className={shared.footerLink}>
-                Pricing
-              </Link>
-              <Link href="/partners" className={shared.footerLink}>
-                Partner programme
-              </Link>
-              <Link href="/privacy" className={shared.footerLink}>
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className={shared.footerLink}>
-                Terms
-              </Link>
-              <Link href="/cookies" className={shared.footerLink}>
-                Cookies
-              </Link>
-              <Link href="/security" className={shared.footerLink}>
-                Security
-              </Link>
-              <Link href="/contact" className={shared.footerLink}>
-                Contact
-              </Link>
-              <Link href="/legal" className={shared.footerLink}>
-                Legal
-              </Link>
-              <Link href="/signin" className={shared.footerLink}>
-                Sign in
-              </Link>
-              <Link href="/signup" className={shared.footerLink}>
-                Register
-              </Link>
-            </nav>
-            <div className={shared.footerTrust}>
+    <footer className={styles.footerWrap} role="contentinfo">
+      <div className={styles.mainFooter}>
+        <div className={styles.footerGrid}>
+          <div className={styles.footerBrand}>
+            <Link href="/" className={styles.footerLogo}>
+              <img src="/logo.png" alt="" className={styles.footerLogoImg} />
+              GDPR Evidence
+            </Link>
+            <p className={styles.footerTagline}>
+              Audit-ready GDPR records for small businesses.
+            </p>
+            <div className={styles.footerTrustRow}>
               <span>EU-hosted data</span>
-              <span>Secure access controls</span>
               <span>Audit trails</span>
+              <span>Access controls</span>
             </div>
           </div>
+
           <div>
-            <h3 className={shared.footerSecurityTitle}>
-              Privacy &amp; data hosting
-            </h3>
-            <ul className={shared.footerSecurityList}>
-              <li>Data stored in the EU; no third-country transfers for core storage.</li>
-              <li>Role-based access and audit logs for workspace activity.</li>
-              <li>We don’t sell your data. See our Privacy Policy for details.</li>
+            <h3 className={styles.footerColTitle}>Product</h3>
+            <ul className={styles.footerColLinks}>
+              <li><Link href="/gdpr" className={styles.footerColLink}>Product</Link></li>
+              <li><Link href="/pricing" className={styles.footerColLink}>Pricing</Link></li>
+              <li><Link href="/partners" className={styles.footerColLink}>Partners</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className={styles.footerColTitle}>Company</h3>
+            <ul className={styles.footerColLinks}>
+              <li><Link href="/security" className={styles.footerColLink}>Security</Link></li>
+              <li><Link href="/contact" className={styles.footerColLink}>Contact</Link></li>
+              <li><Link href="/legal" className={styles.footerColLink}>Legal</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className={styles.footerColTitle}>Policies</h3>
+            <ul className={styles.footerColLinks}>
+              <li><Link href="/privacy" className={styles.footerColLink}>Privacy Policy</Link></li>
+              <li><Link href="/terms" className={styles.footerColLink}>Terms</Link></li>
+              <li><Link href="/cookies" className={styles.footerColLink}>Cookies</Link></li>
             </ul>
           </div>
         </div>
-        <p className={shared.footerLegal}>
-          GDPR Evidence helps you record and demonstrate compliance. This is not legal advice.
-        </p>
-        <div className={shared.footerBottom}>
-          <span className={shared.footerCopyright}>
-            © {new Date().getFullYear()} go-solutions
-          </span>
-          <span className={shared.footerMadeWith}>
-            Made with <span aria-hidden="true">♥</span>
+
+        <div className={styles.bottomBar}>
+          <span className={styles.bottomCopyright}>© {year} go-solutions</span>
+          <span className={styles.bottomDisclaimer}>
+            GDPR Evidence helps you record and demonstrate compliance. This is not legal advice.
           </span>
         </div>
       </div>

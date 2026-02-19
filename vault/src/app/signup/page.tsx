@@ -3,6 +3,7 @@ import styles from "./page.module.css";
 import SignupForm from "@/components/SignupForm";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import HotjarPageTag from "@/components/HotjarPageTag";
 
 export const metadata = {
   title: "Create your GDPR workspace — GDPR Evidence",
@@ -13,6 +14,7 @@ export const metadata = {
 export default function SignupPage() {
   return (
     <div className={shared.page}>
+      <HotjarPageTag tag="signup" />
       <Header />
 
       <main id="main-content" tabIndex={-1}>

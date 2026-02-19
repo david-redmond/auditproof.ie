@@ -3,7 +3,7 @@ import { getSessionUserId } from "@/lib/auth";
 import { auditPath } from "@/lib/constants";
 import { getOrgContext } from "@/lib/org";
 import { canGenerateReports } from "@/lib/permissions";
-import { getSubscriptionStatus } from "@/lib/billing";
+import { getSubscriptionStatus, getDisplayPriceAnnual, getDisplayPriceMonthly } from "@/lib/billing";
 import { connectToDatabase } from "@/lib/mongoose";
 import { AuditPackModel, UserModel } from "@/lib/models";
 import {
@@ -47,6 +47,8 @@ export default async function AuditExportsPage({
   const allowGenerate = canGenerateReports(ctx.role);
   const subscription = await getSubscriptionStatus(ctx.orgId);
   const hasActiveSubscription = subscription.isActive;
+  const priceAnnual = getDisplayPriceAnnual();
+  const priceMonthly = getDisplayPriceMonthly();
 
   const latestLabel =
     list.length > 0 && list[0].generatedAt
@@ -78,6 +80,8 @@ export default async function AuditExportsPage({
             allowGenerate={allowGenerate}
             hasActiveSubscription={hasActiveSubscription}
             latestLabel={latestLabel}
+            priceAnnual={priceAnnual}
+            priceMonthly={priceMonthly}
           />
 
           <AuditExportsSummaryStrip list={list} />
@@ -93,6 +97,8 @@ export default async function AuditExportsPage({
               userMap={userMap}
               allowGenerate={allowGenerate}
               hasActiveSubscription={hasActiveSubscription}
+              priceAnnual={priceAnnual}
+              priceMonthly={priceMonthly}
             />
           )}
         </div>

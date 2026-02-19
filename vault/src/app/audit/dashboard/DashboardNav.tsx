@@ -10,7 +10,6 @@ import styles from "./DashboardNav.module.css";
 type DashboardNavProps = {
   userName: string;
   userEmail: string;
-  organisationName: string;
   canManageUsers?: boolean;
   sidebarOpen?: boolean;
   onToggleSidebar?: () => void;
@@ -32,7 +31,6 @@ function initials(name: string, email: string): string {
 export function DashboardNav({
   userName,
   userEmail,
-  organisationName,
   canManageUsers = false,
   sidebarOpen = false,
   onToggleSidebar,
@@ -120,7 +118,6 @@ export function DashboardNav({
             <img src="/logo.png" alt="Vault" className={styles.logoImage} />
             <span className={styles.brandName}>Vault</span>
             <span className={styles.tagline}>Audit-proof GDPR</span>
-            <span className={styles.orgName}>{organisationName || "Organisation"}</span>
           </Link>
         </div>
 

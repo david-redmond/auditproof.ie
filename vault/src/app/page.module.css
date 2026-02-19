@@ -1,51 +1,51 @@
-/* Home-page-only styles – layout/components from shared.module.css */
-.partnerBenefitsTitle {
-  font-weight: 600;
-  margin-top: var(--theme-space-5);
-  margin-bottom: var(--theme-space-2);
-}
-
-.pricingBlock {
-  background: var(--theme-card-bg);
-  border: 1px solid var(--theme-border);
-  border-radius: var(--theme-radius-md);
-  padding: var(--theme-space-8);
-  max-width: 360px;
-  margin: 0 auto;
-  box-shadow: var(--theme-shadow-md);
-  position: relative;
-  overflow: hidden;
-}
-.pricingBlock::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(120deg, rgba(28, 90, 153, 0.35), transparent 40%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-.pricingMain {
-  font-size: 1.25rem;
-  margin-bottom: var(--theme-space-2);
-}
-.pricingOr {
+/* Home-page-only styles – hero trust line, lists, security, final CTA */
+.trustLine {
   font-size: 0.875rem;
   color: var(--theme-text-muted);
-  margin: var(--theme-space-3) 0;
+  margin-top: var(--theme-space-5);
 }
-.pricingNote {
-  font-size: 0.9375rem;
-  margin-top: var(--theme-space-4);
+.trustSep {
+  color: var(--theme-border-strong);
+  user-select: none;
+}
+
+.bulletList {
+  margin: var(--theme-space-4) 0;
+  padding: 0 0 0 var(--theme-space-5);
+  list-style: disc;
+}
+.bulletList li {
+  margin-bottom: var(--theme-space-2);
+  font-size: 1rem;
+  color: var(--theme-text);
+  line-height: 1.5;
+}
+
+.securityList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--theme-space-3);
+}
+.securityList li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--theme-space-3);
+  font-size: 1rem;
   color: var(--theme-text);
 }
-.pricingSub {
-  font-size: 0.8125rem;
-  color: var(--theme-text-muted);
-  font-style: italic;
-  margin-top: var(--theme-space-2);
+.securityList li::before {
+  content: "✓";
+  color: var(--theme-success);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Final CTA section with gradient */
+.finalCtaSection {
+  padding: var(--theme-space-16) 0;
+  background: linear-gradient(180deg, var(--theme-bg-alt) 0%, rgba(28, 90, 153, 0.06) 50%, var(--theme-bg-alt) 100%);
+  position: relative;
+  overflow: hidden;
 }

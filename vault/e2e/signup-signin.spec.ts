@@ -10,6 +10,12 @@ async function signUpAndSignIn(page: import("@playwright/test").Page, email: str
   await page.goto("/signup");
   await expect(page.getByRole("heading", { name: /create your gdpr workspace/i })).toBeVisible({ timeout: 10_000 });
 
+  // Dismiss cookie banner if present so it doesn't block the form
+  const cookieBanner = page.getByRole("dialog", { name: /cookie consent/i });
+  if (await cookieBanner.isVisible()) {
+    await cookieBanner.getByRole("button", { name: /accept|reject/i }).first().click();
+  }
+
   await page.getByLabel(/full name/i).fill(fullName);
   await page.getByLabel(/organisation name/i).fill(organisationName);
   await page.getByLabel(/work email|email/i).fill(email);
@@ -114,10 +120,11 @@ test.describe("Signup and signin", () => {
     await page.goto("/audit/dashboard/audit-exports");
     await expect(page.getByRole("heading", { name: /export an audit pack/i })).toBeVisible({ timeout: 10_000 });
 
-    await page.getByRole("button", { name: /create audit pack/i }).click();
-    await expect(page.getByRole("dialog")).toBeVisible({ timeout: 5_000 });
+    await page.getByRole("button", { name: /generate new audit pack|create audit pack/i }).click();
+    const auditPackDialog = page.getByRole("dialog", { name: /create audit pack/i });
+    await expect(auditPackDialog).toBeVisible({ timeout: 5_000 });
 
-    await page.getByRole("dialog").getByRole("button", { name: /create audit pack/i }).click();
+    await auditPackDialog.getByRole("button", { name: /create audit pack/i }).click();
 
     await expect(page).toHaveURL(/\/audit\/dashboard\/audit-exports/, { timeout: 20_000 });
     await expect(page.getByRole("table", { name: /audit packs/i })).toBeVisible({ timeout: 10_000 });

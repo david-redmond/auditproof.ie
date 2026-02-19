@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 import styles from "./SignupForm.module.css";
 
 export default function SignupForm() {
@@ -23,6 +24,7 @@ export default function SignupForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    trackEvent("signup_submit");
 
     try {
       const res = await fetch("/api/signup", {
@@ -34,16 +36,20 @@ export default function SignupForm() {
       const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        setError(data?.message || "Something went wrong. Please try again.");
+        const msg = data?.message || "Something went wrong. Please try again.";
+        setError(msg);
         setLoading(false);
+        trackEvent("signup_error", { message: msg });
         return;
       }
 
+      trackEvent("signup_success");
       const redirectUrl = data?.redirectUrl ?? "/";
       window.location.href = redirectUrl;
     } catch {
       setError("Something went wrong. Please try again.");
       setLoading(false);
+      trackEvent("signup_error", { message: "network_error" });
     }
   }
 

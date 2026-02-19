@@ -24,6 +24,8 @@ type Props = {
   allowGenerate: boolean;
   hasActiveSubscription: boolean;
   latestLabel: string | null;
+  priceAnnual?: number;
+  priceMonthly?: number;
 };
 
 /** Fires audit_exports_page_view once on mount. */
@@ -37,7 +39,7 @@ export function AuditExportsPageTracker({ children }: { children: React.ReactNod
   return <>{children}</>;
 }
 
-export function AuditExportsIntro({ showGenerate, allowGenerate, hasActiveSubscription, latestLabel }: Props) {
+export function AuditExportsIntro({ showGenerate, allowGenerate, hasActiveSubscription, latestLabel, priceAnnual, priceMonthly }: Props) {
   return (
     <section
       className={`${listStyles.panel} ${listStyles.introPanel}`}
@@ -64,6 +66,8 @@ export function AuditExportsIntro({ showGenerate, allowGenerate, hasActiveSubscr
             initialOpen={showGenerate}
             triggerLabel="Generate new audit pack"
             hasActiveSubscription={hasActiveSubscription}
+            priceAnnual={priceAnnual}
+            priceMonthly={priceMonthly}
           />
         </div>
       )}

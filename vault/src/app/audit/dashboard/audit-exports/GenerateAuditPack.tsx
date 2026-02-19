@@ -12,6 +12,8 @@ type Props = {
   triggerLabel?: string;
   variant?: "primary" | "secondary";
   hasActiveSubscription?: boolean;
+  priceAnnual?: number;
+  priceMonthly?: number;
 };
 
 type OptionItem = {
@@ -94,6 +96,8 @@ export function GenerateAuditPack({
   triggerLabel = "Create audit pack",
   variant = "primary",
   hasActiveSubscription = true,
+  priceAnnual,
+  priceMonthly,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -211,7 +215,12 @@ export function GenerateAuditPack({
           </div>
         </div>
       )}
-      <PaywallModal open={paywallOpen} onClose={() => setPaywallOpen(false)} />
+      <PaywallModal
+        open={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        annualPrice={priceAnnual}
+        monthlyPrice={priceMonthly}
+      />
     </>
   );
 }

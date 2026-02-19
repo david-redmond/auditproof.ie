@@ -38,9 +38,11 @@ type Props = {
   userMap: Record<string, string>;
   allowGenerate: boolean;
   hasActiveSubscription: boolean;
+  priceAnnual?: number;
+  priceMonthly?: number;
 };
 
-export function AuditExportsTable({ list, userMap, allowGenerate, hasActiveSubscription }: Props) {
+export function AuditExportsTable({ list, userMap, allowGenerate, hasActiveSubscription, priceAnnual, priceMonthly }: Props) {
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
 
   const sorted = useMemo(() => {
@@ -90,6 +92,8 @@ export function AuditExportsTable({ list, userMap, allowGenerate, hasActiveSubsc
               triggerLabel="Generate new audit pack"
               variant="secondary"
               hasActiveSubscription={hasActiveSubscription}
+              priceAnnual={priceAnnual}
+              priceMonthly={priceMonthly}
             />
           )}
         </div>
@@ -130,6 +134,8 @@ export function AuditExportsTable({ list, userMap, allowGenerate, hasActiveSubsc
                         versionLabel={e.versionLabel ?? "—"}
                         hasPdf={!!e.artifacts?.pdf?.key}
                         hasZip={!!e.artifacts?.zip?.key}
+                        priceAnnual={priceAnnual}
+                        priceMonthly={priceMonthly}
                       />
                     </td>
                     <td>

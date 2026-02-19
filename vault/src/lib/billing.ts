@@ -17,6 +17,26 @@ export type SubscriptionStatus = {
 const PAYMENTS_ENABLED = process.env.ENABLE_PAYMENTS === "true";
 
 /**
+ * Display price for annual plan (e.g. for "€179/year"). Uses STRIPE_PRICE_ANNUAL_NUMBER; default 179.
+ */
+export function getDisplayPriceAnnual(): number {
+  const v = process.env.STRIPE_PRICE_ANNUAL_NUMBER;
+  if (v === undefined || v === "") return 179;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 179;
+}
+
+/**
+ * Display price for monthly plan (e.g. for "€18/month"). Uses STRIPE_PRICE_MONTHLY_NUMBER; default 18.
+ */
+export function getDisplayPriceMonthly(): number {
+  const v = process.env.STRIPE_PRICE_MONTHLY_NUMBER;
+  if (v === undefined || v === "") return 18;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 18;
+}
+
+/**
  * Returns subscription status for an organisation (cached from Stripe webhook).
  * Use for gating audit pack export only; data entry and uploads are never gated.
  * When ENABLE_PAYMENTS is not "true", always returns isActive: true so export is allowed.

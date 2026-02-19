@@ -27,7 +27,6 @@ export function DashboardShell({ userName, userEmail, organisationName, canManag
       <DashboardNav
         userName={userName}
         userEmail={userEmail}
-        organisationName={organisationName}
         canManageUsers={canManageUsers}
         sidebarOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen((v) => !v)}
@@ -39,6 +38,7 @@ export function DashboardShell({ userName, userEmail, organisationName, canManag
           isOpen={sidebarOpen}
           onClose={closeSidebar}
           canManageUsers={canManageUsers}
+          organisationName={organisationName}
         />
         <div className={sidebarStyles.main}>{children}</div>
       </div>

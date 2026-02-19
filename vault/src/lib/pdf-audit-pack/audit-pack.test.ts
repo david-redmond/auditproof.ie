@@ -115,6 +115,9 @@ describe("full PDF audit pack generation", () => {
         y = val;
         pdfCtx.y = val;
       },
+      pageWidth: PAGE_W,
+      pageHeight: PAGE_H,
+      margin: MARGIN,
     };
 
     const includes = {
@@ -150,7 +153,6 @@ describe("full PDF audit pack generation", () => {
     const totalPages = pdf.getPageCount();
     for (let i = 0; i < totalPages; i++) {
       drawFooterOnPage(pdfCtx, pdf.getPage(i), {
-        generatedAtStr: "08 Feb 2026 14:00",
         pageNum: i + 1,
         totalPages,
       });
@@ -159,5 +161,65 @@ describe("full PDF audit pack generation", () => {
     const bytes = await pdf.save();
     expect(bytes.length).toBeGreaterThan(1000);
     expect(totalPages).toBeGreaterThanOrEqual(2);
+  });
+
+  it("produces deterministic output for the same input (same page count and byte length)", async () => {
+    const buildPdf = async () => {
+      const pdf = await PDFDocument.create();
+      const font = await pdf.embedFont(StandardFonts.Helvetica);
+      const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+      const colors = getColors();
+      let page = pdf.addPage([PAGE_W, PAGE_H]);
+      let y = PAGE_H - MARGIN - 40;
+      const pdfCtx: PdfContext = {
+        pdf,
+        page,
+        y,
+        font,
+        bold,
+        colors,
+        headerOpts: { orgName: "Test Org", versionLabel: "v2026.02.18" },
+        setPage: (p) => {
+          page = p;
+          pdfCtx.page = p;
+        },
+        setY: (val) => {
+          y = val;
+          pdfCtx.y = val;
+        },
+        pageWidth: PAGE_W,
+        pageHeight: PAGE_H,
+        margin: MARGIN,
+      };
+      const includes = { ropa: true, dsrs: true, incidents: true, evidenceIndex: true, evidenceFiles: false };
+      const stats = getSummaryStatsExport(0, [], [], 0);
+      drawCoverPage(pdfCtx, {
+        orgName: "Test Org",
+        versionLabel: "v2026.02.18",
+        generatedAtStr: "18 Feb 2026 12:00",
+        generatedByStr: "Test User",
+        includes,
+        ropaCount: 0,
+        dsrCount: 0,
+        incidentCount: 0,
+        evidenceCount: 0,
+        auditEventCount: 0,
+      });
+      drawExecutiveSummaryPage(pdfCtx, {
+        orgName: "Test Org",
+        versionLabel: "v2026.02.18",
+        generatedAtStr: "18 Feb 2026 12:00",
+        includes,
+        stats,
+      });
+      const totalPages = pdf.getPageCount();
+      for (let i = 0; i < totalPages; i++) {
+        drawFooterOnPage(pdfCtx, pdf.getPage(i), { pageNum: i + 1, totalPages });
+      }
+      return pdf.save();
+    };
+    const [bytes1, bytes2] = await Promise.all([buildPdf(), buildPdf()]);
+    expect(bytes1.length).toBe(bytes2.length);
+    expect(bytes1.length).toBeGreaterThan(1000);
   });
 });

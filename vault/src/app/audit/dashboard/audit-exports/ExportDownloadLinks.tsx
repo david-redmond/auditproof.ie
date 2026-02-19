@@ -10,9 +10,11 @@ type Props = {
   versionLabel: string;
   hasPdf: boolean;
   hasZip: boolean;
+  priceAnnual?: number;
+  priceMonthly?: number;
 };
 
-export function ExportDownloadLinks({ packId, versionLabel, hasPdf, hasZip }: Props) {
+export function ExportDownloadLinks({ packId, versionLabel, hasPdf, hasZip, priceAnnual, priceMonthly }: Props) {
   const [paywallOpen, setPaywallOpen] = useState(false);
 
   const handleDownload = async (type: "pdf" | "zip") => {
@@ -56,11 +58,14 @@ export function ExportDownloadLinks({ packId, versionLabel, hasPdf, hasZip }: Pr
           >
             ZIP
           </button>
-        ) : (
-          <span className={styles.downloadUnavailable}>Not available</span>
-        )}
+        ) : null}
       </div>
-      <PaywallModal open={paywallOpen} onClose={() => setPaywallOpen(false)} />
+      <PaywallModal
+        open={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        annualPrice={priceAnnual}
+        monthlyPrice={priceMonthly}
+      />
     </>
   );
 }

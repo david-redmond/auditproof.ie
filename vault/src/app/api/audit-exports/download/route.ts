@@ -32,16 +32,19 @@ import {
   friendlyDocType,
   subjectRefDisplay,
   addPageWithHeader,
+  addPageWithHeaderLandscape,
   drawFooterOnPage,
   drawStyledTable,
+  drawStyledTableTwoRow,
   drawCoverPage,
   drawExecutiveSummaryPage,
   drawSectionCard,
   drawInfoBox,
   draw,
+  wrapText,
 } from "@/lib/pdf-audit-pack";
 import type { PdfContext } from "@/lib/pdf-audit-pack";
-import { SECTION_GAP } from "@/lib/pdf-audit-pack/tokens";
+import { SECTION_GAP, SPACE_AFTER_METRIC_ROW, SPACE_BEFORE_TABLE } from "@/lib/pdf-audit-pack/tokens";
 
 /** Normalise orgId to ObjectId so queries always match DB. */
 function toObjectId(value: unknown): Types.ObjectId {
@@ -157,6 +160,9 @@ export async function GET(req: Request) {
       y = val;
       pdfCtx.y = val;
     },
+    pageWidth: PAGE_W,
+    pageHeight: PAGE_H,
+    margin: MARGIN,
   };
 
   // ---------- Cover page ----------
@@ -183,19 +189,30 @@ export async function GET(req: Request) {
     stats,
   });
 
-  // ---------- Section A: RoPA (Article 30) ----------
+  // ---------- Section A: RoPA (Article 30) — landscape ----------
   if (includes.ropa) {
-    addPageWithHeader(pdfCtx, { orgName, versionLabel });
+    pdfCtx.nextPageLandscape = true;
+    addPageWithHeaderLandscape(pdfCtx, { orgName, versionLabel });
     drawSectionCard(pdfCtx, {
-      title: "Record of Processing Activities (Article 30 GDPR)",
-      subtitle: "Data Processing Register (RoPA). A list of the ways your business uses personal data.",
+      title: "Record of Processing Activities (RoPA)",
+      subtitle: "Article 30 GDPR — A list of the ways your organisation uses personal data.",
       statusLine:
         ropaList.length === 0
-          ? "Status: 0 records"
-          : `Status: ${ropaList.length} record${ropaList.length === 1 ? "" : "s"}`,
+          ? "0 records"
+          : `${ropaList.length} record${ropaList.length === 1 ? "" : "s"}`,
     });
-    const ropaColWidths = [90, 72, 68, 55, 58, 52, 58, 50];
-    const ropaHeaders = ["Data use", "Lawful basis", "Retention", "Recipients", "Intl?", "Region", "Last reviewed", "Suppliers"];
+    // Fixed column widths; ~32% to Retention (long-text). Landscape content width ≈ 722pt.
+    const ropaColWidths = [88, 72, 232, 72, 58, 58, 72, 70];
+    const ropaHeaders = [
+      "Data use",
+      "Lawful basis",
+      "Retention",
+      "Recipients",
+      "Intl?",
+      "Region",
+      "Last reviewed",
+      "Suppliers",
+    ];
     const rows = ropaList.length
       ? ropaList.map((r) => {
           const period = (r.retention?.period ?? "").trim().toLowerCase();
@@ -203,7 +220,7 @@ export async function GET(req: Request) {
             period === "until withdrawn" || period === "until_withdrawn"
               ? "Until withdrawn"
               : period === "other" && r.retention?.rationale
-                ? `Other: ${r.retention.rationale.slice(0, 40)}${(r.retention.rationale?.length ?? 0) > 40 ? "…" : ""}`
+                ? `Other: ${r.retention.rationale}`
                 : r.retention?.period ?? "—";
           const recipientsSummary =
             Array.isArray(r.recipients) && r.recipients.length
@@ -218,7 +235,7 @@ export async function GET(req: Request) {
             : "—";
           const intlRegion =
             r.internationalTransfers?.occurs && Array.isArray(r.internationalTransfers?.countries) && r.internationalTransfers.countries.length
-              ? r.internationalTransfers.countries.slice(0, 2).join(", ")
+              ? r.internationalTransfers.countries.join(", ")
               : r.internationalTransfers?.occurs
                 ? "Yes"
                 : "—";
@@ -232,8 +249,7 @@ export async function GET(req: Request) {
             formatDate(r.lastReviewedAt),
             suppliers,
           ];
-        }
-      )
+        })
       : [];
     drawStyledTable(pdfCtx, {
       headers: ropaHeaders,
@@ -244,89 +260,101 @@ export async function GET(req: Request) {
     pdfCtx.setY(pdfCtx.y - SECTION_GAP);
   }
 
-  // ---------- Section B: DSR (Articles 12-23) ----------
+  // ---------- Section B: DSR (Articles 12–23) — landscape, two-row pattern ----------
   if (includes.dsrs) {
-    addPageWithHeader(pdfCtx, { orgName, versionLabel });
+    pdfCtx.nextPageLandscape = true;
+    addPageWithHeaderLandscape(pdfCtx, { orgName, versionLabel });
     drawSectionCard(pdfCtx, {
-      title: "Data Subject Requests (Articles 12-23 GDPR)",
+      title: "Data Subject Requests (Articles 12–23 GDPR)",
       subtitle: "Requests to access, correct, or delete personal data.",
       statusLine:
         dsrList.length === 0
-          ? "Status: 0 records"
-          : `Status: ${stats.dsrOpenCount} open${stats.dsrOverdueCount > 0 ? ` • ${stats.dsrOverdueCount} overdue` : ""}`,
+          ? "0 records"
+          : `${stats.dsrOpenCount} open${stats.dsrOverdueCount > 0 ? ` • ${stats.dsrOverdueCount} overdue` : ""}`,
     });
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const dsrColWidths = [52, 62, 70, 52, 42, 48, 48, 56, 48, 44];
-    const dsrHeaders = ["Received", "Type", "Who asked", "Reply by", "Overdue?", "Id verified", "Response sent", "Extension", "Closure", "Note"];
+    // Two-row layout: row1 = Received | Type | Who | Reply By | Status; row2 = ID? | Sent? | Extension | Note. Col4 ~32% for Note.
+    const dsrColWidths = [90, 108, 108, 352, 64];
+    const dsrHeadersRow1 = ["Received", "Type", "Who", "Reply by", "Late?"];
+    const dsrHeadersRow2 = ["ID?", "Sent?", "Extension", "Note"];
     type DsrDoc = (typeof dsrList)[number] & { identityVerifiedAt?: Date | null; overdueNote?: string | null };
-    const dsrRows = dsrList.map((d: DsrDoc) => {
+    const overdueIndices: number[] = [];
+    const dsrRows = dsrList.map((d: DsrDoc, idx: number) => {
       const due = d.dueAt ? new Date(d.dueAt) : null;
-      const isOverdue =
-        !d.outcome && due != null && (due.setHours(0, 0, 0, 0), due < today);
-      const idVerified = d.identityVerifiedAt ? formatDate(d.identityVerifiedAt) : "—";
+      const isOverdue = !d.outcome && due != null && (due.setHours(0, 0, 0, 0), due < today);
+      if (isOverdue) overdueIndices.push(idx);
+      const idVerified = d.identityVerifiedAt ? "Yes" : "—";
       const responseSentStr = d.responseSent ? (d.responseSentAt ? formatDate(d.responseSentAt) : "Yes") : "No";
       const extStr = d.extension?.used
         ? (d.extension.newDueAt ? formatDate(d.extension.newDueAt) : "Yes") + (d.extension.justification ? " + reason" : "")
         : "No";
-      const note = isOverdue && !d.outcome && (d.overdueNote ?? d.summary)
-        ? String((d.overdueNote ?? d.summary) ?? "").slice(0, 40)
-        : "—";
-      return [
-        formatDate(d.receivedAt),
-        friendlyRequestType(d.requestType),
-        subjectRefDisplay(d.subjectRef),
-        formatDate(d.dueAt),
-        isOverdue ? "Yes" : "No",
-        idVerified,
-        responseSentStr,
-        extStr,
-        formatDate(d.completedAt),
-        note,
-      ];
+      const note = isOverdue && !d.outcome && (d.overdueNote ?? d.summary) ? String((d.overdueNote ?? d.summary) ?? "") : "—";
+      return {
+        row1: [
+          formatDate(d.receivedAt),
+          friendlyRequestType(d.requestType),
+          subjectRefDisplay(d.subjectRef),
+          formatDate(d.dueAt),
+          isOverdue ? "Yes" : "No",
+        ],
+        row2: [idVerified, responseSentStr, extStr, note],
+      };
     });
-    drawStyledTable(pdfCtx, {
-      headers: dsrHeaders,
+    drawStyledTableTwoRow(pdfCtx, {
+      headersRow1: dsrHeadersRow1,
+      headersRow2: dsrHeadersRow2,
       colWidths: dsrColWidths,
       rows: dsrRows,
       emptyMessage: "No requests recorded.",
+      highlightRecord: (i) => overdueIndices.includes(i),
     });
     pdfCtx.setY(pdfCtx.y - SECTION_GAP);
+    const dsrCallout =
+      "Response deadlines apply under Articles 12–15. Extensions must be justified and the data subject informed; ensure extension rationale is logged.";
+    draw(pdfCtx, dsrCallout, 9.5, false);
+    pdfCtx.setY(pdfCtx.y - 8);
   }
 
-  // ---------- Section C: Incidents (Articles 33-34) ----------
+  // ---------- Section C: Incidents (Articles 33–34) — landscape ----------
   if (includes.incidents) {
-    addPageWithHeader(pdfCtx, { orgName, versionLabel });
+    pdfCtx.nextPageLandscape = true;
+    addPageWithHeaderLandscape(pdfCtx, { orgName, versionLabel });
     drawSectionCard(pdfCtx, {
-      title: "Security Incidents & Personal Data Breaches (Articles 33-34 GDPR)",
+      title: "Security Incidents & Personal Data Breaches (Articles 33–34 GDPR)",
       subtitle: "Incidents that could affect personal data.",
-      statusLine:
-        incidentList.length === 0
-          ? "Status: 0 records"
-          : `Status: ${stats.incidentOpenCount} open`,
     });
+    const incLogged = stats.incidentCount;
+    const incOpen = stats.incidentOpenCount;
+    const incidentMetric =
+      incLogged === 0
+        ? "Incidents logged: 0 · Open: 0"
+        : incLogged === 1
+          ? `Incidents logged: 1 · Open: ${incOpen}`
+          : `Incidents logged: ${incLogged} · Open: ${incOpen}`;
+    draw(pdfCtx, incidentMetric, 9.5, true);
+    pdfCtx.setY(pdfCtx.y - SPACE_AFTER_METRIC_ROW);
     const incident72h =
-      "Where notification is required, GDPR requires notification without undue delay and, where feasible, within 72 hours.";
-    draw(pdfCtx, incident72h, 9, false);
-    pdfCtx.setY(pdfCtx.y - 8);
-    const colWidths = [58, 100, 50, 50, 58, 120];
-    const headers = ["Found on", "Summary", "Severity", "Open/Closed", "DPC notified?", "Rationale if not"];
+      "Where notification is required, GDPR requires notification without undue delay and, where feasible, within 72 hours of becoming aware of the breach.";
+    const incidentContentWidth = pdfCtx.pageWidth - 2 * pdfCtx.margin;
+    wrapText(pdfCtx, incident72h, 9.5, incidentContentWidth);
+    pdfCtx.setY(pdfCtx.y - SPACE_BEFORE_TABLE);
+    // Summary and Rationale get ~32% and ~34% (long-text). Landscape ≈ 722pt.
+    const colWidths = [72, 232, 58, 58, 58, 244];
+    const headers = ["Found on", "Summary", "Severity", "Status", "DPC?", "Rationale if not"];
     const rows = incidentList.length
       ? incidentList.map((inc) => {
-        const notif = inc.notification ?? undefined;
-        return [
-          formatDate(inc.discoveredAt),
-          (inc.title ?? "—").slice(0, 50),
-          friendlyRisk(inc.riskLevel),
-          inc.status === "closed" ? "Closed" : "Open",
-          notif?.dpcNotified
-            ? notif.dpcNotifiedAt
-              ? formatDate(notif.dpcNotifiedAt)
-              : "Yes"
-            : "No",
-          notif?.dpcNotified ? "—" : (notif?.rationaleIfNotNotified ?? "—").slice(0, 60),
-        ];
-      })
+          const notif = inc.notification ?? undefined;
+          const statusDisplay = inc.status === "closed" ? "Closed" : "Open";
+          return [
+            formatDate(inc.discoveredAt),
+            inc.title ?? "—",
+            friendlyRisk(inc.riskLevel),
+            statusDisplay,
+            notif?.dpcNotified ? (notif.dpcNotifiedAt ? formatDate(notif.dpcNotifiedAt) : "Yes") : "No",
+            notif?.dpcNotified ? "—" : (notif?.rationaleIfNotNotified ?? "—"),
+          ];
+        })
       : [];
     drawStyledTable(pdfCtx, {
       headers,
@@ -337,18 +365,20 @@ export async function GET(req: Request) {
     pdfCtx.setY(pdfCtx.y - SECTION_GAP);
   }
 
-  // ---------- Section D: Evidence / Documents (Article 24) ----------
+  // ---------- Section D: Evidence / Documents (Article 24) — landscape ----------
   if (includes.evidenceIndex) {
-    addPageWithHeader(pdfCtx, { orgName, versionLabel });
+    pdfCtx.nextPageLandscape = true;
+    addPageWithHeaderLandscape(pdfCtx, { orgName, versionLabel });
     drawSectionCard(pdfCtx, {
       title: "Accountability & Supporting Documents (Article 24 GDPR)",
       subtitle: "Policies and documents that support GDPR accountability.",
       statusLine:
         evidenceList.length === 0
-          ? "Status: 0 documents"
-          : `Status: ${evidenceList.length} document${evidenceList.length === 1 ? "" : "s"}`,
+          ? "0 documents"
+          : `${evidenceList.length} document${evidenceList.length === 1 ? "" : "s"}`,
     });
-    const colWidths = [95, 140, 72, 72, 95];
+    // Document name ~35% (long-text). Landscape ≈ 722pt.
+    const colWidths = [88, 254, 108, 108, 164];
     const headers = ["What this is", "Document name", "Added on", "Review by", "Tags"];
     const rows = evidenceList.map((doc) => [
       friendlyDocType(doc.type),
@@ -366,8 +396,9 @@ export async function GET(req: Request) {
     pdfCtx.setY(pdfCtx.y - SECTION_GAP);
   }
 
-  // ---------- Section E: ZIP ----------
+  // ---------- Section E: ZIP (portrait) ----------
   if (includes.evidenceFiles) {
+    pdfCtx.nextPageLandscape = false;
     addPageWithHeader(pdfCtx, { orgName, versionLabel });
     drawSectionCard(pdfCtx, {
       title: "Attached files (ZIP)",
@@ -389,12 +420,11 @@ export async function GET(req: Request) {
     drawInfoBox(pdfCtx, zipLines);
   }
 
-  // ---------- Footers on all pages ----------
+  // ---------- Footers on all pages (left: brand, center: Confidential, right: Page N of M) ----------
   const totalPages = pdf.getPageCount();
   for (let i = 0; i < totalPages; i++) {
     const p = pdf.getPage(i);
     drawFooterOnPage(pdfCtx, p, {
-      generatedAtStr,
       pageNum: i + 1,
       totalPages,
     });

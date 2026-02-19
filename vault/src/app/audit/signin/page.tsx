@@ -7,6 +7,7 @@ import styles from "./page.module.css";
 import { RefCapture } from "../dashboard/RefCapture";
 import SignInForm from "./SignInForm";
 import { SignInMessage } from "./SignInMessage";
+import HotjarPageTag from "@/components/HotjarPageTag";
 
 export const metadata = {
   title: "Sign in — Vault",
@@ -21,6 +22,7 @@ export default async function SignInPage({
   const params = await searchParams;
   return (
     <div className={shared.page}>
+      <HotjarPageTag tag="signin" />
       <Suspense fallback={null}>
         <RefCapture />
       </Suspense>

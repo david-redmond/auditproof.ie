@@ -1,12 +1,13 @@
 import Link from "next/link";
 import shared from "../shared.module.css";
+import styles from "./page.module.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Product — GDPR Evidence",
   description:
-    "A simple way to keep GDPR evidence organised and audit-ready. Record, review, and export the records regulators and auditors typically ask for.",
+    "Audit-ready GDPR records for growing businesses. Record evidence, keep it organised, export a complete audit pack.",
 };
 
 export default function ProductPage() {
@@ -15,360 +16,171 @@ export default function ProductPage() {
       <Header />
 
       <main id="main-content" tabIndex={-1}>
-        {/* Product Overview */}
+        {/* 1. Hero */}
         <section className={shared.hero}>
           <div className={`${shared.container} ${shared.heroLayout}`}>
-            <div className={shared.heroCopy}>
+            <div className={`${shared.heroCopy} ${styles.heroBlock}`}>
               <h1 className={shared.heroTitle}>
-                A simple way to keep GDPR evidence organised and audit-ready
+                Audit-ready GDPR records for growing businesses
               </h1>
               <p className={shared.heroSub}>
-                This tool helps small businesses record, manage, and export the
-                GDPR information that regulators and auditors typically ask for.
+                Record key evidence, keep it organised, and export a complete GDPR audit pack when you need it.
               </p>
-              <p className={shared.heroSub}>
-                It focuses on <strong>evidence and accountability</strong> — not
-                legal advice, not automation, and not complex compliance
-                workflows.
+              <div className={shared.ctas}>
+                <Link href="/signup" className={shared.ctaPrimary}>
+                  Register free
+                </Link>
+                <a href="/sample-audit-pack.pdf" className={shared.ctaSecondary} download="sample-audit-pack.pdf">
+                  View sample audit pack
+                </a>
+              </div>
+              <p className={styles.trustLine} aria-label="Trust highlights">
+                EU-hosted
+                <span className={styles.trustSep} aria-hidden="true"> • </span>
+                Timestamped records
+                <span className={styles.trustSep} aria-hidden="true"> • </span>
+                Exportable audit pack
               </p>
-              <blockquote className={shared.pullQuote}>
-                "Can you show how you comply with GDPR?" You'll already have the
-                answer.
-              </blockquote>
             </div>
-            <figure className={shared.heroFigure}>
-              <img
-                className={shared.heroImage}
-                src="/illustrations/product-flow.svg"
-                alt="Record, review, and export workflow"
-              />
-            </figure>
+            <aside className={shared.heroAside}>
+              <figure className={styles.heroImage}>
+                <img
+                  src="/illustrations/hero-vault.svg"
+                  alt="GDPR Evidence dashboard: RoPA, request log, incident register, export"
+                />
+              </figure>
+            </aside>
           </div>
         </section>
 
-        {/* How It Works */}
+        {/* 2. The Problem */}
         <section className={shared.section}>
           <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>
-              GDPR, without the stress
-            </h2>
-            <ol className={shared.stepList}>
-              <li data-step="1. ">
-                <strong>Record</strong>
-                <p>
-                  Capture the key GDPR records as you go — processing
-                  activities, requests, incidents, and policies.
-                </p>
-              </li>
-              <li data-step="2. ">
-                <strong>Review</strong>
-                <p>
-                  Keep everything up to date with clear timestamps and
-                  ownership.
-                </p>
-              </li>
-              <li data-step="3. ">
-                <strong>Export</strong>
-                <p>
-                  Generate a complete GDPR audit pack in minutes, ready to share
-                  with an auditor, advisor, or regulator.
-                </p>
-              </li>
-            </ol>
+            <h2 className={`${shared.sectionTitle} ${styles.sectionTitleCenter}`}>The hard part is the record-keeping</h2>
             <p className={shared.bodyCopy}>
-              No scrambling. No last-minute spreadsheets.
+              Processing activities live in spreadsheets or emails. DSARs aren’t tracked. Incidents are handled ad hoc. Evidence gets assembled at the last minute.
             </p>
+            <ul className={styles.bulletListShort}>
+              <li>Processing activities scattered across tools</li>
+              <li>Data subject requests not tracked or overdue</li>
+              <li>Incidents and breaches logged informally</li>
+              <li>Audit pack pulled together under pressure</li>
+            </ul>
           </div>
         </section>
 
-        {/* What You Can Record - RoPA */}
+        {/* 3. What you can record — 4 modules in 2x2 grid */}
         <section className={`${shared.section} ${shared.sectionAlt}`}>
           <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>
-              What You Can Record
-            </h2>
-            <h3 className={shared.subsectionTitle}>
-              Record of Processing Activities (RoPA)
-            </h3>
-            <div className={shared.sectionWithArt}>
-              <div className={shared.bodyCopy}>
-                <p>
-                  Document how and why personal data is processed across your
-                  business.
+            <h2 className={`${shared.sectionTitle} ${styles.sectionTitleCenter}`}>What you can record</h2>
+
+            <div className={styles.modulesGrid}>
+              <div className={styles.moduleCard}>
+                <h3 className={styles.moduleCardTitle}>Record of Processing Activities (RoPA)</h3>
+                <p className={styles.moduleCardLead}>
+                  Document what you process, why, and on what lawful basis.
                 </p>
-                <p>For each activity, record:</p>
-                <ul className={shared.bulletList}>
-                  <li>Purpose of processing</li>
-                  <li>Categories of personal data</li>
-                  <li>Categories of data subjects</li>
-                  <li>Lawful basis</li>
-                  <li>Retention period</li>
-                  <li>Third-party processors</li>
+                <ul className={styles.moduleCardList}>
+                  <li>Purpose and lawful basis</li>
+                  <li>Data categories, retention, processors</li>
+                  <li>Review dates and ownership</li>
                 </ul>
-                <p>
-                  This aligns with Article 30 GDPR and the Irish DPC's
-                  expectations for accountability.
-                </p>
               </div>
-              <figure className={shared.sectionArt}>
-                <img
-                  className={shared.sectionArtImage}
-                  src="/illustrations/ropa.svg"
-                  alt="Structured record of processing activities"
-                />
-              </figure>
+
+              <div className={styles.moduleCard}>
+                <h3 className={styles.moduleCardTitle}>Data Subject Request Log</h3>
+                <p className={styles.moduleCardLead}>
+                  Track access, deletion, and correction requests and meet deadlines.
+                </p>
+                <ul className={styles.moduleCardList}>
+                  <li>Date received and type</li>
+                  <li>Actions taken and completion date</li>
+                  <li>Outcome and audit trail</li>
+                </ul>
+              </div>
+
+              <div className={styles.moduleCard}>
+                <h3 className={styles.moduleCardTitle}>Incident & Breach Register</h3>
+                <p className={styles.moduleCardLead}>
+                  Log incidents consistently — even a clear “no breaches” history is evidence.
+                </p>
+                <ul className={styles.moduleCardList}>
+                  <li>What happened and risk assessment</li>
+                  <li>Actions and notification decision</li>
+                  <li>Closure and documentation</li>
+                </ul>
+              </div>
+
+              <div className={styles.moduleCard}>
+                <h3 className={styles.moduleCardTitle}>Policies & Evidence Store</h3>
+                <p className={styles.moduleCardLead}>
+                  Upload and organise the documents that back your GDPR records.
+                </p>
+                <ul className={styles.moduleCardList}>
+                  <li>Privacy notices and agreements</li>
+                  <li>Training records and internal policies</li>
+                  <li>Versioned and findable</li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Data Subject Request Log */}
-        <section className={shared.section}>
+        {/* 4. Export / Audit pack */}
+        <section className={shared.section} id="export">
           <div className={shared.container}>
-            <h3 className={shared.subsectionTitle}>
-              Data Subject Request Log
-            </h3>
-            <div className={shared.sectionWithArt}>
-              <div className={shared.bodyCopy}>
-                <p>
-                  Track how you handle requests from individuals, including:
-                </p>
-                <ul className={shared.bulletList}>
-                  <li>Deletion (right to erasure)</li>
-                  <li>Correction (rectification)</li>
-                  <li>Access requests</li>
-                </ul>
-                <p>Each request is logged with:</p>
-                <ul className={shared.bulletList}>
-                  <li>Date received</li>
-                  <li>Request type</li>
-                  <li>Actions taken</li>
-                  <li>Completion date</li>
-                  <li>Outcome</li>
-                </ul>
-                <p>
-                  This provides clear evidence that requests are handled properly
-                  and on time.
-                </p>
-              </div>
-              <figure className={shared.sectionArt}>
-                <img
-                  className={shared.sectionArtImage}
-                  src="/illustrations/dsr.svg"
-                  alt="Request log checklist"
-                />
-              </figure>
-            </div>
-          </div>
-        </section>
-
-        {/* Incident & Breach Register */}
-        <section className={`${shared.section} ${shared.sectionAlt}`}>
-          <div className={shared.container}>
-            <h3 className={shared.subsectionTitle}>
-              Incident & Breach Register
-            </h3>
-            <div className={shared.sectionWithArt}>
-              <div className={shared.bodyCopy}>
-                <p>
-                  Record data protection incidents in a consistent, auditable
-                  way.
-                </p>
-                <p>Log:</p>
-                <ul className={shared.bulletList}>
-                  <li>What happened</li>
-                  <li>When it happened</li>
-                  <li>Initial risk assessment</li>
-                  <li>Actions taken</li>
-                  <li>Whether notification was required</li>
-                </ul>
-                <p>
-                  Even a "no breaches" history is valuable evidence during an
-                  audit.
-                </p>
-              </div>
-              <figure className={shared.sectionArt}>
-                <img
-                  className={shared.sectionArtImage}
-                  src="/illustrations/incident.svg"
-                  alt="Incident register and shield"
-                />
-              </figure>
-            </div>
-          </div>
-        </section>
-
-        {/* Policies & Evidence Store */}
-        <section className={shared.section}>
-          <div className={shared.container}>
-            <h3 className={shared.subsectionTitle}>
-              Policies & Evidence Store
-            </h3>
-            <div className={shared.sectionWithArt}>
-              <div className={shared.bodyCopy}>
-                <p>
-                  Upload and organise key GDPR-related documents, such as:
-                </p>
-                <ul className={shared.bulletList}>
-                  <li>Privacy notices</li>
-                  <li>Data retention policies</li>
-                  <li>Processor agreements</li>
-                  <li>Training records</li>
-                </ul>
-                <p>
-                  Everything is stored securely and linked to your overall GDPR
-                  records.
-                </p>
-              </div>
-              <figure className={shared.sectionArt}>
-                <img
-                  className={shared.sectionArtImage}
-                  src="/illustrations/policies.svg"
-                  alt="Policies and evidence folder"
-                />
-              </figure>
-            </div>
-          </div>
-        </section>
-
-        {/* GDPR Audit Export */}
-        <section className={`${shared.section} ${shared.sectionAlt}`}>
-          <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>
-              GDPR Audit Export
-            </h2>
-            <p className={shared.sectionLead}>
-              One click. One pack. Fully organised.
-            </p>
-            <div className={shared.bodyCopy}>
-              <p>
-                When you need to demonstrate GDPR compliance, generate a
-                complete audit pack that includes:
-              </p>
-              <ul className={shared.bulletList}>
-                <li>Organisation GDPR summary</li>
-                <li>Record of Processing Activities</li>
-                <li>Data subject request history</li>
-                <li>Incident and breach register</li>
-                <li>Evidence and policy index</li>
+            <h2 className={`${shared.sectionTitle} ${styles.sectionTitleCenter}`}>One click. Complete GDPR audit pack.</h2>
+            <div className={styles.blockCenter}>
+              <ul className={styles.bulletListShort}>
+                <li>Organisation summary</li>
+                <li>RoPA export</li>
+                <li>Request history</li>
+                <li>Incident register</li>
+                <li>Evidence index</li>
               </ul>
-              <p>Exports are available as:</p>
-              <ul className={shared.bulletList}>
-                <li>
-                  <strong>PDF</strong> (easy to review and share)
-                </li>
-                <li>
-                  <strong>ZIP</strong> (for advisors or consultants)
-                </li>
-              </ul>
-              <p>
-                Each export is timestamped and versioned, providing a clear
-                audit trail.
+              <p className={shared.bodyCopy} style={{ marginTop: "var(--theme-space-4)" }}>
+                PDF cover, table of contents, full registers. Optional ZIP with attached documents.
               </p>
+              <div style={{ marginTop: "var(--theme-space-6)" }}>
+                <a href="/sample-audit-pack.pdf" className={shared.ctaSecondary} download="sample-audit-pack.pdf">
+                  View sample audit pack
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Clear Boundaries */}
-        <section className={shared.section}>
-          <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>
-              Clear Boundaries (Important)
-            </h2>
-            <div className={shared.bodyCopy}>
-              <p>
-                To keep the tool simple, safe, and low-risk, it intentionally
-                does <strong>not</strong>:
-              </p>
-              <ul className={shared.bulletList}>
-                <li>Provide legal advice</li>
-                <li>Automatically delete data from your systems</li>
-                <li>Scan websites or manage cookie consent</li>
-                <li>Replace professional advisors or consultants</li>
-              </ul>
-              <p>
-                The purpose of the tool is to{" "}
-                <strong>record decisions and actions</strong>, not to make them
-                for you.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Who This Is For */}
+        {/* 5. Security snapshot */}
         <section className={`${shared.section} ${shared.sectionAlt}`}>
           <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>
-              Who This Is For
-            </h2>
-            <h3 className={shared.subsectionTitle}>A good fit if you:</h3>
-            <ul className={shared.bulletList}>
-              <li>Are a small or growing business</li>
-              <li>Handle customer, client, or employee personal data</li>
-              <li>Want GDPR to be organised and manageable</li>
-              <li>Need to demonstrate compliance when asked</li>
-            </ul>
-            <p className={shared.bodyCopy}>
-              Common users include:
-            </p>
-            <ul className={shared.bulletList}>
-              <li>Agencies</li>
-              <li>Clinics and practices</li>
-              <li>SaaS companies</li>
-              <li>E-commerce businesses</li>
-              <li>Professional services firms</li>
-            </ul>
-
-            <h3 className={shared.subsectionTitle}>Not ideal if you:</h3>
-            <ul className={shared.bulletList}>
-              <li>Are a large enterprise with bespoke legal systems</li>
-              <li>Need full automation or data discovery</li>
-              <li>Require sector-specific compliance tooling</li>
-            </ul>
+            <h2 className={`${shared.sectionTitle} ${styles.sectionTitleCenter}`}>Security snapshot</h2>
+            <div className={styles.blockCenter}>
+              <ul className={styles.securityList}>
+                <li>EU-hosted storage</li>
+                <li>Role-based access controls</li>
+                <li>Workspace audit logs</li>
+              </ul>
+              <p className={shared.bodyCopy} style={{ marginTop: "var(--theme-space-4)" }}>
+                <Link href="/security" className={shared.footerLink}>Full security and compliance details →</Link>
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Built With Accountability */}
+        {/* 6. What this tool is not */}
         <section className={shared.section}>
           <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>
-              Built With Accountability in Mind
-            </h2>
-            <ul className={shared.bulletList}>
-              <li>EU-hosted infrastructure</li>
-              <li>Secure access controls</li>
-              <li>Clear audit trails</li>
-              <li>Designed around Irish DPC guidance</li>
+            <h2 className={`${shared.sectionTitle} ${styles.sectionTitleCenter}`}>What this tool is not</h2>
+            <div className={styles.blockCenter}>
+              <ul className={styles.bulletListShort}>
+                <li>Not legal advice</li>
+              <li>Not a cookie scanner or banner tool</li>
+              <li>Not automated deletion or compliance “magic”</li>
             </ul>
-            <p className={shared.bodyCopy}>
-              GDPR compliance is ongoing — this tool helps you{" "}
-              <strong>document it properly</strong>.
+            <p className={shared.bodyCopy} style={{ marginTop: "var(--theme-space-4)" }}>
+              It records your decisions — it doesn’t make them for you.
             </p>
           </div>
-        </section>
-
-        {/* Next Steps */}
-        <section className={`${shared.section} ${shared.sectionAlt}`}>
-          <div className={shared.container}>
-            <h2 className={shared.sectionTitle}>Next Steps</h2>
-            <p className={shared.bodyCopy}>
-              If you'd like to see how this works in practice:
-            </p>
-            <ul className={shared.bulletList}>
-              <li>View a sample GDPR audit pack</li>
-              <li>Request a short walkthrough</li>
-              <li>Ask questions before committing</li>
-            </ul>
-            <p className={shared.finalCopy}>
-              <strong>Make GDPR calm and boring again.</strong>
-            </p>
-            <div className={shared.ctas}>
-              <Link href="/#cta" className={shared.ctaPrimary}>
-                View sample audit pack
-              </Link>
-              <Link href="/signup" className={shared.ctaSecondary}>
-                Register for free
-              </Link>
-            </div>
           </div>
         </section>
       </main>

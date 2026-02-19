@@ -12,6 +12,7 @@ import {
   EvidenceDocumentModel,
 } from "@/lib/models";
 import { HelpTooltip } from "./HelpTooltip";
+import DashboardPageViewTracker from "./DashboardPageViewTracker";
 import shared from "../../shared.module.css";
 import styles from "./page.module.css";
 
@@ -79,6 +80,7 @@ export default async function DashboardPage() {
 
   return (
     <main id="main-content" className={shared.section}>
+      <DashboardPageViewTracker />
       <div className={`${shared.container} ${styles.wrap}`}>
         <header className={styles.header}>
           <div>

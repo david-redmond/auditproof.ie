@@ -16,6 +16,31 @@
   position: relative;
 }
 
+.sidebarContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--theme-space-4);
+}
+
+/* Same vertical padding as navbar so company name aligns with header */
+.orgHeader {
+  padding: var(--theme-space-3) var(--theme-space-4);
+  border-bottom: 1px solid var(--theme-border);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--theme-text);
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+@media (min-width: 769px) {
+  .orgHeader {
+    padding: var(--theme-space-4) var(--theme-space-4);
+  }
+}
+
 .section {
   display: flex;
   flex-direction: column;
