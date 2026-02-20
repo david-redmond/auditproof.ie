@@ -27,7 +27,6 @@ import {
   formatDateTime,
   friendlyLawfulBasis,
   friendlyRequestType,
-  friendlyOutcome,
   friendlyRisk,
   friendlyDocType,
   subjectRefDisplay,
@@ -107,7 +106,7 @@ export async function GET(req: Request) {
 
   const orgFilter = orgIdFilter(queryOrgId);
 
-  const [org, generatedByUser, ropaCount, dsrCount, incidentCount, evidenceCount, auditEventCount, ropaList, incidentList, dsrList, evidenceList] =
+  const [org, generatedByUser, ropaCount, _dsrCount, _incidentCount, evidenceCount, auditEventCount, ropaList, incidentList, dsrList, evidenceList] =
     await Promise.all([
       OrganisationModel.findById(queryOrgId).select("name").lean(),
       UserModel.findById(pack.generatedByUserId).select("name email").lean(),

@@ -4,8 +4,6 @@ import { useActionState } from "react";
 import { deleteRopa } from "./actions";
 import listStyles from "../list.module.css";
 
-type State = { error?: string } | null;
-
 type Props = { id: string; name: string };
 
 export function DeleteRopaButton({ id, name }: Props) {
@@ -16,7 +14,7 @@ export function DeleteRopaButton({ id, name }: Props) {
   }
 
   const [state, formAction] = useActionState(
-    async (_prev: State) => deleteRopa(id),
+    async () => deleteRopa(id),
     null
   );
 

@@ -32,7 +32,7 @@ export default function Header() {
   }, [mobileOpen]);
 
   useEffect(() => {
-    setMobileOpen(false);
+    queueMicrotask(() => setMobileOpen(false));
   }, [pathname]);
 
   return (

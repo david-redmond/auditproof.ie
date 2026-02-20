@@ -65,7 +65,7 @@ function RemoveUserButton({
 
   useEffect(() => {
     if (removeState != null && !removeState.error) {
-      setConfirmOpen(false);
+      queueMicrotask(() => setConfirmOpen(false));
     }
   }, [removeState]);
 
@@ -219,13 +219,19 @@ export function SettingsUsers({
   const [copied, setCopied] = useState(false);
   const [inviteRole, setInviteRole] = useState("viewer");
   const [inviteKey, setInviteKey] = useState(0);
+  const [now, setNow] = useState(() => Date.now());
   const { showToast } = useSettingsToast();
+
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(t);
+  }, []);
 
   const ownerCount = memberships.filter((m) => m.role === "owner").length;
 
   useEffect(() => {
     if (state?.inviteUrl) {
-      setInviteKey((k) => k + 1);
+      queueMicrotask(() => setInviteKey((k) => k + 1));
       showToast("Invite sent");
     }
   }, [state?.inviteUrl, showToast]);
@@ -240,10 +246,10 @@ export function SettingsUsers({
     }
   }
 
-  function getStatus(m: MembershipRow) {
+  function getStatus(m: MembershipRow, now: number) {
     if (!m.expiresAt) return "Active";
     const exp = new Date(m.expiresAt).getTime();
-    return exp < Date.now() ? "Expired" : "Active";
+    return exp < now ? "Expired" : "Active";
   }
 
   return (
@@ -289,10 +295,10 @@ export function SettingsUsers({
                     <td>
                       <span
                         className={`${styles.statusPill} ${
-                          getStatus(m) === "Expired" ? styles.statusExpired : styles.statusActive
+                          getStatus(m, now) === "Expired" ? styles.statusExpired : styles.statusActive
                         }`}
                       >
-                        {getStatus(m)}
+                        {getStatus(m, now)}
                       </span>
                     </td>
                     {canManageUsers && (

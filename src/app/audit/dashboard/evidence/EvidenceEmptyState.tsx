@@ -13,7 +13,7 @@ const CHECKLIST = [
 
 type Props = { canEdit?: boolean };
 
-export function EvidenceEmptyState({ canEdit = true }: Props) {
+export function EvidenceEmptyState({ canEdit: _canEdit = true }: Props) {
   const viewFired = useRef(false);
   useEffect(() => {
     if (viewFired.current) return;

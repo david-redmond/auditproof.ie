@@ -34,7 +34,7 @@ export function DashboardNav({
   canManageUsers = false,
   sidebarOpen = false,
   onToggleSidebar,
-  onSidebarClose,
+  onSidebarClose: _onSidebarClose,
   hamburgerRef,
 }: DashboardNavProps) {
   const router = useRouter();

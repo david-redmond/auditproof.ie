@@ -7,9 +7,9 @@ const MAILTRAP_CONFIGURED =
   Boolean(MAILTRAP_API_TOKEN && MAILTRAP_ACCOUNT_ID && MAILTRAP_INBOX_ID);
 
 async function getLatestPartnerEmailFromMailtrap(
-  fullName: string,
-  companyName: string,
-  email: string
+  _fullName: string,
+  _companyName: string,
+  _email: string
 ): Promise<{ found: boolean; subject?: string; body?: string }> {
   if (!MAILTRAP_CONFIGURED) return { found: false };
   const base = `https://mailtrap.io/api/accounts/${MAILTRAP_ACCOUNT_ID}/inboxes/${MAILTRAP_INBOX_ID}`;

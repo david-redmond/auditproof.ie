@@ -110,17 +110,21 @@ export function GenerateAuditPack({
   // When landing with ?generate=1, show paywall if not subscribed, else show form
   useEffect(() => {
     if (!initialOpen) return;
-    if (hasActiveSubscription) {
-      setOpen(true);
-    } else {
-      setPaywallOpen(true);
-    }
+    queueMicrotask(() => {
+      if (hasActiveSubscription) {
+        setOpen(true);
+      } else {
+        setPaywallOpen(true);
+      }
+    });
   }, [initialOpen, hasActiveSubscription]);
 
   useEffect(() => {
     if (state?.error === "subscription_required") {
-      setOpen(false);
-      setPaywallOpen(true);
+      queueMicrotask(() => {
+        setOpen(false);
+        setPaywallOpen(true);
+      });
     }
   }, [state]);
 

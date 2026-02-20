@@ -7,7 +7,7 @@ import { PasswordFieldWithToggle } from "./PasswordFieldWithToggle";
 import styles from "@/components/AuthCard.module.css";
 
 const MIN_LENGTH = 8;
-const RECOMMENDED_LENGTH = 12;
+const _RECOMMENDED_LENGTH = 12;
 
 type Props = {
   token: string | null;

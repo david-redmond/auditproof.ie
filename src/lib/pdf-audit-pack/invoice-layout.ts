@@ -123,10 +123,10 @@ export function drawMetaGrid(
 ): void {
   addPageIfNeeded(ctx, 80);
   const { page, font, colors } = ctx;
-  const boxTop = ctx.y;
+  const _boxTop = ctx.y;
   const lineHeight = LINE_SMALL + 2;
-  const leftColWidth = (PAGE_W - 2 * MARGIN) * 0.5;
-  const rightColWidth = (PAGE_W - 2 * MARGIN) * 0.5;
+  const _leftColWidth = (PAGE_W - 2 * MARGIN) * 0.5;
+  const _rightColWidth = (PAGE_W - 2 * MARGIN) * 0.5;
   const numRows = Math.max(leftLines.length, rightLines.length);
   const boxHeight = numRows * lineHeight + 2 * BOX_PAD;
 

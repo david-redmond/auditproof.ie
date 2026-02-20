@@ -174,9 +174,9 @@ export default function PartnerSignupForm() {
   if (status === "success") {
     return (
       <div>
-        <h3 className={styles.successTitle}>Thanks — you're in.</h3>
+        <h3 className={styles.successTitle}>Thanks — you&apos;re in.</h3>
         <p className={styles.successText}>
-          We've received your partner application. We'll follow up by email with
+          We&apos;ve received your partner application. We&apos;ll follow up by email with
           next steps (including referral tracking and commission details).
         </p>
       </div>
@@ -365,7 +365,7 @@ export default function PartnerSignupForm() {
         <p className={styles.hint}>Submitting your details securely…</p>
       ) : (
         <p className={styles.reassurance}>
-          We respond within 1–2 business days. No spam, no cold sales — we'll only contact you about your partner application.
+          We respond within 1–2 business days. No spam, no cold sales — we&apos;ll only contact you about your partner application.
         </p>
       )}
     </form>

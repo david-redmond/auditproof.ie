@@ -44,7 +44,7 @@ export async function uploadEvidence(formData: FormData) {
   let sizeBytes: number | undefined;
 
   if (file && file.size > 0) {
-    const ext = path.extname(file.name) || "";
+    const _ext = path.extname(file.name) || "";
     const safeName = `${Date.now()}-${(file.name || "file").replace(/[^a-zA-Z0-9.-]/g, "_")}`;
     const relPath = path.join(orgId, safeName);
     const absPath = path.join(UPLOAD_DIR, relPath);

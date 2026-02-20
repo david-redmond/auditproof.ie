@@ -76,7 +76,7 @@ function drawHeaderCell(
   y: number,
   width: number,
   lines: string[],
-  rowHeight: number
+  _rowHeight: number
 ): void {
   const { page, bold, colors } = ctx;
   const padV = TABLE_CELL_PAD_V;
@@ -179,7 +179,8 @@ export function drawStyledTable(
 ): void {
   const { page, font, colors } = ctx;
   const { left: tableLeft, width: tableWidth } = getTableBounds(ctx);
-  let { headers, colWidths, rows, zebraStriping = true, highlightRow } = opts;
+  const { headers, colWidths, zebraStriping = true, highlightRow } = opts;
+  let rows = opts.rows;
   if (rows.length === 0 && opts.emptyMessage) {
     const emptyRow = Array(headers.length).fill("—");
     emptyRow[0] = opts.emptyMessage;
@@ -278,7 +279,8 @@ export function drawStyledTableTwoRow(
 ): void {
   const { page, font, colors } = ctx;
   const { left: tableLeft, width: tableWidth } = getTableBounds(ctx);
-  let { headersRow1, headersRow2, colWidths, rows, highlightRecord } = opts;
+  const { headersRow1, headersRow2, colWidths, highlightRecord } = opts;
+  let rows = opts.rows;
   if (rows.length === 0 && opts.emptyMessage) {
     rows = [
       {

@@ -3,15 +3,10 @@ import { draw } from "./layout";
 import { drawPageHeader, drawMetaGrid, drawCalloutBox, drawTotalsBox } from "./invoice-layout";
 import {
   MARGIN,
-  PAGE_W,
   BODY_SIZE,
   SMALL_SIZE,
-  LINE_SMALL,
-  BOX_PAD,
   SPACE_12,
-  TITLE_SIZE,
   SUBTITLE_SIZE,
-  COVER_TITLE_SIZE,
 } from "./tokens";
 import type { AuditPackIncludes } from "./route-data";
 

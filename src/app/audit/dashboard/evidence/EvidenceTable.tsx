@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import listStyles from "../list.module.css";
 import { EvidenceUpload } from "./EvidenceUpload";
 
@@ -17,19 +17,19 @@ export type EvidenceRow = {
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
 /** Start of today in ms (UTC date only for comparison with stored dates). */
-function startOfTodayMs(): number {
-  const d = new Date();
+function startOfTodayMs(now: number): number {
+  const d = new Date(now);
   d.setUTCHours(0, 0, 0, 0);
   return d.getTime();
 }
 
 function getReviewBadge(
-  reviewDueAt: string | null | undefined
+  reviewDueAt: string | null | undefined,
+  now: number
 ): { label: string; className: string } | null {
   if (!reviewDueAt) return null;
   const due = new Date(reviewDueAt).getTime();
-  const now = Date.now();
-  const startToday = startOfTodayMs();
+  const startToday = startOfTodayMs(now);
   if (due < startToday) return { label: "Overdue", className: listStyles.badgeOverdue };
   if (due - now <= THIRTY_DAYS_MS) return { label: "Review due", className: listStyles.badgeReviewDue };
   return { label: "Up to date", className: listStyles.badgeUpToDate };
@@ -45,14 +45,18 @@ export function EvidenceTable({ list, typeLabels, canEdit = true }: Props) {
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [reviewFilter, setReviewFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(t);
+  }, []);
 
   const filtered = useMemo(() => {
     return list.filter((doc) => {
       if (typeFilter !== "all" && doc.type !== typeFilter) return false;
       if (reviewFilter !== "all") {
         const due = doc.reviewDueAt ? new Date(doc.reviewDueAt).getTime() : null;
-        const now = Date.now();
-        const startToday = startOfTodayMs();
+        const startToday = startOfTodayMs(now);
         if (reviewFilter === "review_due") {
           if (!due) return false;
           if (due >= startToday && due - now > THIRTY_DAYS_MS) return false;
@@ -68,7 +72,7 @@ export function EvidenceTable({ list, typeLabels, canEdit = true }: Props) {
       }
       return true;
     });
-  }, [list, typeFilter, reviewFilter, searchQuery]);
+  }, [list, typeFilter, reviewFilter, searchQuery, now]);
 
   const uniqueTypes = useMemo(() => {
     const set = new Set(list.map((d) => d.type));
@@ -165,7 +169,7 @@ export function EvidenceTable({ list, typeLabels, canEdit = true }: Props) {
                 </tr>
               )}
               {filtered.map((doc) => {
-                const badge = getReviewBadge(doc.reviewDueAt);
+                const badge = getReviewBadge(doc.reviewDueAt, now);
                 const tagsDisplay = (doc.tags ?? []).length > 0
                   ? (doc.tags ?? []).join(", ")
                   : null;

@@ -8,7 +8,7 @@ import listStyles from "../list.module.css";
 
 type Props = { allowGenerate?: boolean; hasActiveSubscription?: boolean };
 
-export function AuditExportsEmptyState({ allowGenerate = true, hasActiveSubscription = true }: Props) {
+export function AuditExportsEmptyState({ allowGenerate = true, hasActiveSubscription: _hasActiveSubscription = true }: Props) {
   const viewFired = useRef(false);
   useEffect(() => {
     if (viewFired.current) return;

@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { PaywallModal } from "./PaywallModal";
-import listStyles from "../list.module.css";
 import styles from "./audit-exports.module.css";
 
 type Props = {

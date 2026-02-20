@@ -54,7 +54,7 @@ export default function CookieConsentProvider({
 
   // Sync from localStorage after mount (client-only) so consent is correct after hydration
   useEffect(() => {
-    setConsentState(getInitialConsent());
+    queueMicrotask(() => setConsentState(getInitialConsent()));
   }, []);
 
   useEffect(() => {

@@ -53,7 +53,7 @@ export async function getSessionUserId(): Promise<string | null> {
       return null;
     }
     return payload.sub;
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 }

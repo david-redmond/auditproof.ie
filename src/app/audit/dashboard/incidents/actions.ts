@@ -102,7 +102,7 @@ export async function updateIncident(id: string, formData: FormData) {
   const occurredAt = occurredAtStr ? new Date(occurredAtStr) : undefined;
 
   const existing = await IncidentModel.findOne({ _id: id, orgId }).lean();
-  const wasClosed = existing?.status === "closed";
+  const _wasClosed = existing?.status === "closed";
   const status = closeIncident ? "closed" : existing?.status ?? "open";
   const closedAt = closeIncident ? new Date() : existing?.closedAt;
 

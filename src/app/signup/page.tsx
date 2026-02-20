@@ -34,7 +34,7 @@ export default function SignupPage() {
                 What happens after you sign up
               </h2>
               <p className={shared.bodyCopy}>
-                After creating your account, you'll be able to:
+                After creating your account, you&apos;ll be able to:
               </p>
               <ul className={shared.bulletList}>
                 <li>Record your processing activities (RoPA)</li>

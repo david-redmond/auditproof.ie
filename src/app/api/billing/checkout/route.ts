@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   await connectToDatabase();
   const orgId = ctx.orgId.toString();
   const org = await OrganisationModel.findById(ctx.orgId).lean();
-  let partnerRefToUse = (org as { partnerRef?: string })?.partnerRef ?? partnerRef;
+  const partnerRefToUse = (org as { partnerRef?: string })?.partnerRef ?? partnerRef;
   if (partnerRefToUse && !(org as { partnerRef?: string })?.partnerRef) {
     await OrganisationModel.updateOne(
       { _id: ctx.orgId },

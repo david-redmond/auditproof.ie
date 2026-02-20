@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { DashboardNav } from "./DashboardNav";
 import { DashboardSidebar } from "./DashboardSidebar";
 import sidebarStyles from "./DashboardSidebar.module.css";

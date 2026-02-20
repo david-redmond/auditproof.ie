@@ -122,7 +122,7 @@ export async function inviteUser(orgId: string, formData: FormData) {
     { revokedAt: new Date() }
   );
 
-  const invite = await InviteModel.create({
+  const _invite = await InviteModel.create({
     orgId,
     email,
     role: inviteRole,

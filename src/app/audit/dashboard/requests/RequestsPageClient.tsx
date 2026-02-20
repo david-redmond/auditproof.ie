@@ -9,7 +9,7 @@ import { getRequestTypeLabel } from "./labels";
 import listStyles from "../list.module.css";
 import { RequestsEmptyState } from "./RequestsEmptyState";
 
-const OUTCOME_LABELS: Record<string, string> = {
+const _OUTCOME_LABELS: Record<string, string> = {
   completed_full: "Completed",
   completed_partial: "Partial",
   refused: "Refused",

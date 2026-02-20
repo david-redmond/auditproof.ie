@@ -74,7 +74,7 @@ export function ImportTemplatesForm({ templates }: Props) {
   const toggle = useCallback((templateId: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      const template = templates.find((t) => t.templateId === templateId);
+      const _template = templates.find((t) => t.templateId === templateId);
       if (next.has(templateId)) {
         next.delete(templateId);
         trackEvent("ropa_templates_select", { template_key: templateId, selected: false });

@@ -31,11 +31,13 @@ export default async function DashboardPage() {
   const orgId = ctx.orgId;
   const userName = ctx.user.name?.trim() || "";
   const userEmail = ctx.user.email ?? "";
+  // eslint-disable-next-line react-hooks/purity -- server component, one value per request
+  const now = Date.now();
   const todayLabel = new Intl.DateTimeFormat("en-IE", {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(new Date());
+  }).format(new Date(now));
 
   const [ropaCount, dsrOpenCount, incidentOpenCount, evidenceCount, dsrDueSoon, dsrOverdue] =
     await Promise.all([
@@ -46,7 +48,7 @@ export default async function DashboardPage() {
       DataSubjectRequestModel.find({
         orgId,
         $or: [{ outcome: null }, { outcome: { $exists: false } }],
-        dueAt: { $gte: new Date(), $lte: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
+        dueAt: { $gte: new Date(now), $lte: new Date(now + 7 * 24 * 60 * 60 * 1000) },
       })
         .sort({ dueAt: 1 })
         .limit(5)
@@ -54,7 +56,7 @@ export default async function DashboardPage() {
       DataSubjectRequestModel.find({
         orgId,
         $or: [{ outcome: null }, { outcome: { $exists: false } }],
-        dueAt: { $lt: new Date() },
+        dueAt: { $lt: new Date(now) },
       })
         .sort({ dueAt: 1 })
         .limit(5)

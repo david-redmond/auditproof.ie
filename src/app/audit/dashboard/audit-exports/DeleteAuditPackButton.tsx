@@ -4,8 +4,6 @@ import { useActionState } from "react";
 import { deleteAuditPack } from "./actions";
 import styles from "./audit-exports.module.css";
 
-type State = { ok?: boolean; error?: string } | null;
-
 type Props = { id: string };
 
 export function DeleteAuditPackButton({ id }: Props) {
@@ -16,7 +14,7 @@ export function DeleteAuditPackButton({ id }: Props) {
   }
 
   const [state, formAction] = useActionState(
-    async (_prev: State) => deleteAuditPack(id),
+    async () => deleteAuditPack(id),
     null
   );
 

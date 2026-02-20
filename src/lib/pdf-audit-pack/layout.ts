@@ -8,7 +8,6 @@ import {
   PAGE_H_LANDSCAPE,
   HEADER_H,
   CONTENT_TOP,
-  CONTENT_BOTTOM,
   FOOTER_H,
   LINE,
   LINE_SMALL,
@@ -16,7 +15,6 @@ import {
   BODY_SIZE,
   SMALL_SIZE,
   FOOTER_SIZE,
-  TABLE_ROW_HEIGHT,
   PARAGRAPH_MAX_WIDTH,
 } from "./tokens";
 
@@ -74,7 +72,7 @@ export function addPageWithHeaderLandscape(
   ctx: PdfContext,
   opts: { orgName: string; versionLabel: string }
 ): void {
-  const { page, font, colors, setPage, setY } = ctx;
+  const { font, colors, setPage, setY } = ctx;
   const w = PAGE_W_LANDSCAPE;
   const h = PAGE_H_LANDSCAPE;
   const margin = MARGIN_TABLE;

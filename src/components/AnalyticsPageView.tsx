@@ -15,7 +15,7 @@ export default function AnalyticsPageView() {
   useEffect(() => {
     if (!pathname) return;
     // Avoid duplicate page_view on first mount when GA config already sent one
-    const isFirst = prevPath.current === null;
+    const _isFirst = prevPath.current === null;
     prevPath.current = pathname;
     trackPageView(pathname, typeof document !== "undefined" ? document.title : undefined);
   }, [pathname]);
