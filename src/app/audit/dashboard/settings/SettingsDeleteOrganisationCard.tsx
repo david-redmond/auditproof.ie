@@ -16,7 +16,11 @@ export function SettingsDeleteOrganisationCard({ organisationName }: Props) {
   const [confirmText, setConfirmText] = useState("");
   const [understood, setUnderstood] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [state, formAction] = useActionState(deleteOrganisation, null as { error?: string } | null);
+  const [state, formAction] = useActionState(
+    async (_prev: { error?: string } | null, formData: FormData) =>
+      deleteOrganisation(formData),
+    null as { error?: string } | null
+  );
 
   const canSubmit =
     orgNameConfirm.trim() === organisationName.trim() &&

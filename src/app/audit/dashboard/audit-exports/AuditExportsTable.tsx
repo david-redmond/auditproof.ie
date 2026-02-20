@@ -19,7 +19,7 @@ export type SerializedPack = {
     evidenceIndex?: boolean;
     evidenceFiles?: boolean;
   } | null;
-  artifacts?: { pdf?: { key?: string }; zip?: { key?: string } } | null;
+  artifacts?: { pdf?: { key?: string | null }; zip?: { key?: string | null } } | null;
 };
 
 function getContentChips(includes: SerializedPack["includes"]): string[] {

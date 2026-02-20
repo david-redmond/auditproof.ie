@@ -16,7 +16,10 @@ export function SettingsDeleteAccountCard({ hasPassword, isSoleOwner }: Props) {
   const [confirmText, setConfirmText] = useState("");
   const [understood, setUnderstood] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [state, formAction] = useActionState(deleteAccount, null as { error?: string } | null);
+  const [state, formAction] = useActionState(
+    async (_prev: { error?: string } | null, formData: FormData) => deleteAccount(formData),
+    null as { error?: string } | null
+  );
 
   const canSubmit =
     confirmText === "DELETE" &&

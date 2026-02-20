@@ -27,7 +27,7 @@ Open [http://localhost:3000](http://localhost:3000). The home page is the market
 
 The PDF is built from a small **design token** module so layout and branding can be adjusted in one place.
 
-- **Tokens** (`vault/src/lib/pdf-audit-pack/tokens.ts`): Page size (A4), margins (min 18 mm), typography sizes (title 22–26 pt, section 14–16 pt, body 10.5–11 pt, tables 9.5–10 pt), line heights, table cell padding, card padding and radius, and grid column count.
+- **Tokens** (`src/lib/pdf-audit-pack/tokens.ts`): Page size (A4), margins (min 18 mm), typography sizes (title 22–26 pt, section 14–16 pt, body 10.5–11 pt, tables 9.5–10 pt), line heights, table cell padding, card padding and radius, and grid column count.
 - **Colours** (`getColors()` in `tokens.ts`): Text, muted, divider, table header/zebra, box border/background, footer, and a single **accent** colour (e.g. blue) plus **accentTint**, **risk**, and **success** for highlights and badges. To change branding (e.g. Go Solutions blue), edit the `accent` and optionally `accentTint` values in `getColors()`.
 - **Fonts**: The PDF uses `pdf-lib` standard fonts (Helvetica) by default. To use Inter or Source Sans, add `.ttf`/`.otf` files (e.g. under `public/fonts/`) and embed them when creating the document (see `route.ts`); then pass the embedded font into the PDF context instead of `StandardFonts.Helvetica`.
 - **Footer**: Left text defaults to “Go Solutions GDPR Audit Pack”, centre to “Confidential”, right to “Page N of M”. Override by passing `left`, `center`, or `right` to `drawFooterOnPage()`.
@@ -43,7 +43,7 @@ The PDF is built from a small **design token** module so layout and branding can
 
 ### Environment variables
 
-Create `vault/.env.local` (or set these in your deployment environment). Minimum for local dev:
+Create `.env.local` at the project root (or set these in your deployment environment). Minimum for local dev:
 
 ```bash
 AUTH_SECRET=your-secret-at-least-32-chars

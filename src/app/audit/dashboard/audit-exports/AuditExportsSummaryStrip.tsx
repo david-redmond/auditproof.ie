@@ -2,7 +2,9 @@ import listStyles from "../list.module.css";
 
 type Pack = {
   generatedAt?: unknown;
-  artifacts?: { pdf?: { key?: string }; zip?: { key?: string } };
+  artifacts?:
+    | { pdf?: { key?: string | null } | null; zip?: { key?: string | null } | null }
+    | null;
 };
 
 type Props = {

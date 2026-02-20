@@ -36,6 +36,6 @@ Primary CTA is **Create workspace** (signup) across the site. Secondary CTA is *
 
 ---
 
-## Files (moved into vault)
+## Files (project root)
 
-Marketing content and shared UI from the gdpr app now live in **vault**: `Header`, `Footer`, `shared.module.css`, homepage (with redirect when logged in), partners, signup, gdpr product page, security, privacy, terms, contact, sitemap, `PartnerSignupForm` (with a11y improvements), and these docs.
+Marketing content and shared UI from the gdpr app now live in this repo: `Header`, `Footer`, `shared.module.css`, homepage (with redirect when logged in), partners, signup, gdpr product page, security, privacy, terms, contact, sitemap, `PartnerSignupForm` (with a11y improvements), and these docs (e.g. under `src/`).

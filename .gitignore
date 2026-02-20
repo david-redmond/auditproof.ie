@@ -22,6 +22,21 @@ test-results/
 playwright-report/
 playwright/.cache/
 
+# Uploads and local data
+data/
+
+# pnp / yarn
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# TypeScript build info
+*.tsbuildinfo
+
 # Misc
 *.pem
 .vercel

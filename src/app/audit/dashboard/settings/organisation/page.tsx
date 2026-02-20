@@ -21,8 +21,17 @@ export const metadata = {
 
 const initialFromOrg = (org: {
   name?: string;
-  controllerContact?: { name?: string; email?: string; phone?: string };
-  dpo?: { status?: string; name?: string; email?: string; justification?: string };
+  controllerContact?:
+    | { name?: string | null; email?: string | null; phone?: string | null }
+    | null;
+  dpo?:
+    | {
+        status?: string | null;
+        name?: string | null;
+        email?: string | null;
+        justification?: string | null;
+      }
+    | null;
   lastReviewAt?: Date | null;
 }) => ({
   name: org.name ?? "",

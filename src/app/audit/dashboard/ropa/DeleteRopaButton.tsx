@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { deleteRopa } from "./actions";
 import listStyles from "../list.module.css";
 
-type State = { ok?: boolean; error?: string } | null;
+type State = { error?: string } | null;
 
 type Props = { id: string; name: string };
 
@@ -22,7 +22,7 @@ export function DeleteRopaButton({ id, name }: Props) {
 
   return (
     <form action={formAction} onSubmit={confirmDelete} style={{ display: "inline" }}>
-      {state?.error && !state?.ok && (
+      {state?.error && (
         <span className={listStyles.muted} style={{ display: "inline-block", marginRight: "var(--theme-space-2)" }}>
           {state.error}
         </span>
@@ -31,7 +31,7 @@ export function DeleteRopaButton({ id, name }: Props) {
         type="submit"
         className={listStyles.deleteButton}
         aria-label={`Delete ${name}`}
-        disabled={state?.ok}
+        disabled={false}
       >
         Delete
       </button>

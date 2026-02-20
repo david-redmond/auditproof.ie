@@ -11,7 +11,7 @@ export type ReadinessResult = {
 };
 
 export function checkEnvReadiness(): ReadinessResult {
-  const missing = REQUIRED.filter((key) => {
+  const missing: string[] = REQUIRED.filter((key) => {
     const v = process.env[key];
     return v === undefined || (typeof v === "string" && v.trim() === "");
   });
